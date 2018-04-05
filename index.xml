@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cylopsis- an elucidation of ML</title>
+    <link>http://cylopsis.com/</link>
+    <description>Recent content on Cylopsis- an elucidation of ML</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>Jagpreet Singh Chawla</copyright>
+    <lastBuildDate>Thu, 05 Apr 2018 23:27:29 +0530</lastBuildDate>
+    
+        <atom:link href="http://cylopsis.com/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>http://cylopsis.com/about/</link>
+      <pubDate>Thu, 05 Apr 2018 23:27:29 +0530</pubDate>
+      
+      <guid>http://cylopsis.com/about/</guid>
+      
+        <description>I&amp;rsquo;m Jagpreet Singh Chawla, and this is my blog. With the recent developments in the field of CS, there are a lot of interesting things to learn and projects to work on. Although all necessary resources are easily available, they are scattered and finding and combining them is time-consuming. This is my attempt to help others by sharing my hard-earned knowledge and experience in a simple and intuitive method as I work on different projects.</description>
+      
+    </item>
+    
+  </channel>
+</rss>
