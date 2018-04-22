@@ -1,0 +1,17 @@
+host it on a network using TensorFlow Serving, and use it to classify on live webcam feed
+
+We will also use OpenCV for taking input from camera and processing image to prepare input for a neural network. Since the focus of this article is TensorFlow, we will have a quick look at the OpenCV code but will not go into its details.
+
+We will use docker to run final trained model as a service, which will be called up by our final program to classify faces. We will be using OpenCV in our final program to find faces ( OpenCV has some basic pretrained models ). These faces will be input to our neural network. We will also use multiprocessing framework to run 2 processes in parallet to get realtime output.
+
+After training the model, we will use a docker for running tensorflow-serving for serving our trained model. So you need docker installed on your system. To download and install docker, visit <https://www.docker.com/community-edition#/download>. You can also setup tensorflow-serving on your system instead of using docker container. If you wish to setup tensorflow-serving on your system instead of using docker, visit <https://github.com/tensorflow/serving/blob/master/tensorflow_serving/g3doc/setup.md> for instructions.
+
+We will use OpenCV in our final program to use the trained model being served by tensorflow-serving. To install OpenCV run:
+```
+(venv)$ pip install opencv-python==3.4.0.12
+```
+
+We will also need `tensorflow-serving-api` to interact with `tensorflow-serving`. To install tensorflow-serving-apis, run:
+```
+(venv)$ pip install tensorflow-serving-api==1.6.0
+```

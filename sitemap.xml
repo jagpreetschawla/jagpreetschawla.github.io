@@ -10,7 +10,21 @@
   </url>
   
   <url>
+    <loc>http://cylopsis.com/post/neural-network/gender-classification/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
     <loc>http://cylopsis.com/categories/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/tags/classifier/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
@@ -23,7 +37,36 @@
   </url>
   
   <url>
+    <loc>http://cylopsis.com/tags/feed-forward-nn/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/categories/neural-network/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/post/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://cylopsis.com/tags/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/tags/tensorflow/</loc>
+    <lastmod>2018-04-22T02:50:18+05:30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
