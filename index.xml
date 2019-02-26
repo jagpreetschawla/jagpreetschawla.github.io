@@ -19,7 +19,18 @@
       
       <guid>http://cylopsis.com/about/</guid>
       
-        <description>I&amp;rsquo;m Jagpreet Singh Chawla, and this is my blog. With the recent developments in the field of CS, there are a lot of interesting things to learn and projects to work on. Although all necessary resources are easily available, they are scattered and finding and combining them is time-consuming. This is my attempt to help others by sharing my hard-earned knowledge and experience in a simple and intuitive method as I work on different projects.</description>
+        <description>I&amp;rsquo;m Jagpreet Singh Chawla, and this is my blog. With the recent developments in the field of CS, there are a lot of interesting things to learn and projects to work on. As I do that, I will try to share my experience and learnings through this platform. You will find mixed types of articles on this blog including step by step guides, my project overviews, and my learning experiences.</description>
+      
+    </item>
+    
+    <item>
+      <title>Live Gender Classification</title>
+      <link>http://cylopsis.com/post/neural-network/live-gender-classification/</link>
+      <pubDate>Mon, 03 Sep 2018 15:45:28 +0530</pubDate>
+      
+      <guid>http://cylopsis.com/post/neural-network/live-gender-classification/</guid>
+      
+        <description>In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification.</description>
       
     </item>
     
@@ -30,7 +41,7 @@
       
       <guid>http://cylopsis.com/post/neural-network/gender-classification/</guid>
       
-        <description>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon.</description>
+        <description>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here.</description>
       
     </item>
     

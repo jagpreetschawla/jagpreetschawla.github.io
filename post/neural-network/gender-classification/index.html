@@ -26,7 +26,7 @@
 
 
 <meta name="author" content="Jagpreet Singh Chawla" />
-  <meta name="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon." />
+  <meta name="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here." />
 
   <meta name="keywords" content="ML, Neural Networks, Blog, tensor flow" />
 
@@ -35,7 +35,7 @@
 
 
 
-<meta name="generator" content="Hugo 0.38" />
+<meta name="generator" content="Hugo 0.54.0" />
 
 
 <link rel="canonical" href="http://cylopsis.com/post/neural-network/gender-classification/" />
@@ -59,40 +59,26 @@
 
 
 <meta property="og:title" content="Gender Classification" />
-<meta property="og:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon." />
+<meta property="og:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here." />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="http://cylopsis.com/post/neural-network/gender-classification/" />
-
-
-
 <meta property="article:published_time" content="2018-04-22T02:50:18&#43;05:30"/>
-
 <meta property="article:modified_time" content="2018-04-22T02:50:18&#43;05:30"/>
 
-
-
-
-
-
-
-
-
-
-
 <meta itemprop="name" content="Gender Classification">
-<meta itemprop="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon.">
+<meta itemprop="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here.">
 
 
 <meta itemprop="datePublished" content="2018-04-22T02:50:18&#43;05:30" />
 <meta itemprop="dateModified" content="2018-04-22T02:50:18&#43;05:30" />
-<meta itemprop="wordCount" content="2498">
+<meta itemprop="wordCount" content="2588">
 
 
 
 <meta itemprop="keywords" content="tensorflow,feed-forward-nn,classifier," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Gender Classification"/>
-<meta name="twitter:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon."/>
+<meta name="twitter:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here."/>
 
 <!--[if lte IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
@@ -182,8 +168,8 @@
               <a href="/categories/neural-network/"> Neural Network </a>
             
           </div>
-        <span class="more-meta"> 2498 words </span>
-        <span class="more-meta"> 12 min read </span>
+        <span class="more-meta"> 2588 words </span>
+        <span class="more-meta"> 13 min read </span>
       </div>
     </header>
 
@@ -210,6 +196,7 @@
 <li><a href="#evaluating-our-estimator">Evaluating our Estimator</a></li>
 <li><a href="#predicting-output">Predicting Output</a></li>
 </ul></li>
+<li><a href="#next-steps">Next Steps</a></li>
 </ul>
 </nav>
   </div>
@@ -219,20 +206,16 @@
     <div class="post-content">
       
 
-<p>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. I will be posting an article about it soon.</p>
-
+<p>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it <a href="/post/neural-network/live-gender-classification/">here</a>.</p>
 
 <figure class="center">
-    
-        <img src="/img/gender_classifier.png" />
-    
-    
+    <img src="/img/gender_classifier.png"/> 
 </figure>
 
 
 <h1 id="outline">Outline</h1>
 
-<p>We will look at how to build a classic feed-forward network using TensorFlow&rsquo;s estimator API and train it to classify faces as male or female. There are some prerequisites and assumptions made in this article. For sake of clarity and keeping it concise, it is not meant for extreme beginners of python programming or Neural Networks (at least some familiarity is a must). To easily follow the content, you should:</p>
+<p>We will look at how to build a classic feed-forward network using TensorFlow&rsquo;s estimator API and train it to classify faces as male or female. For sake of clarity and keeping it concise, I will not go into basics of python programming or Neural Networks. To easily follow the content, you should:</p>
 
 <ul>
 <li>be familiar with programming, and know at least basics of python</li>
@@ -240,16 +223,16 @@
 <li>know what Gradient Decent or optimizer is</li>
 </ul>
 
+<p>I will go through some basics of the setup for anyone who is getting started and wants to follow my code.</p>
+
 <h1 id="getting-started">Getting Started</h1>
 
-<p>To get started you need to setup a python virtual environment (python 2.7) with tensorflow, numpy, and scikit-image ( you can also use any other library to read and show the image like scipy, PIL  or OpenCV etc. ). If you have everything setup or know how to setup all requirements, feel free to skip to next section.</p>
-
-<p>First, we need virtualenv installed. It&rsquo;s a good idea to use virtualenv, and have a separate python setup for each project to avoid conflicting dependencies and any issues due to system-wide installed packages. If you don&rsquo;t already have virtualvenv, you can install it using pip (python&rsquo;s package manager)</p>
+<p>For this project, I used a python virtual environment (python 2.7) with tensorflow, numpy, and scikit-image ( you can also use any other library to read and show the image like scipy, PIL or OpenCV etc. ). It&rsquo;s a good idea to use virtualenv, and have a separate python setup for each project to avoid conflicting dependencies and any issues due to system-wide installed packages. You can easily install virtualenv using pip (python&rsquo;s package manager).</p>
 
 <pre><code>$ pip install virtualenv
 </code></pre>
 
-<p>Next, we need to create a virtualenv and install all dependencies inside it. For creating virtualenv, we just need to run:</p>
+<p>We can create a new virtual python environment using this command:</p>
 
 <pre><code>$ virtualenv  ~/mf_classifier/venv
 </code></pre>
@@ -279,9 +262,9 @@
 
 <h1 id="training-and-evaluating-the-neural-network-nn">Training and Evaluating the Neural Network (NN)</h1>
 
-<p>We are going to train a simple feed-forward Neural Network to classify faces as male face or female face. It is a <a href="https://en.wikipedia.org/wiki/Supervised_learning">supervised learning</a> algorithm, so the first thing you need is labeled data. You can get the data from my <a href="https://github.com/jagpreetschawla/live_gender_classifier/tree/master/data">GitHub repository</a> for this project. It is organized in 2 folders, one for male and one for female, so its a labeled dataset.</p>
+<p>We are going to train a simple feed-forward Neural Network to classify faces as male face or female face. It is a <a href="https://en.wikipedia.org/wiki/Supervised_learning">supervised learning</a> algorithm, so the first thing you need is labeled data. You can get the data from my <a href="https://github.com/jagpreetschawla/live_gender_classifier/tree/master/data">GitHub repository</a> for this project. It is organized in 2 folders, one for male and one for female, so it is a labeled dataset.</p>
 
-<p>Downloaded the dataset? Good. Let&rsquo;s get right into it. We will go through the code in parts, but you can see the complete notebook <a href="https://github.com/jagpreetschawla/live_gender_classifier/blob/master/nn_classifier.ipynb">here</a>.</p>
+<p>We will go through the code in parts, but you can see the complete notebook <a href="https://github.com/jagpreetschawla/live_gender_classifier/blob/master/nn_classifier.ipynb">here</a>.</p>
 
 <h2 id="importing-requirements">Importing requirements</h2>
 
@@ -481,21 +464,29 @@ print([&quot;male&quot; if i[&quot;output&quot;] else &quot;female&quot; for i i
 
 <p>This will show you an image and print the prediction for that image as shown below:</p>
 
-
 <figure class="center">
-    
-        <img src="/img/gender_prediction.png" width="200px" />
-    
-    
-    <figcaption>
-        <h4>prediction on a test image</h4>
-        
-    </figcaption>
-    
+    <img src="/img/gender_prediction.png" width="200px"/> <figcaption>
+            <h4>prediction on a test image</h4>
+        </figcaption>
 </figure>
 
 
 <p>Feel free to check random images.</p>
+
+<h1 id="next-steps">Next Steps</h1>
+
+<p>What we created is a very basic model. Although it gives us decent accuracy, there is a lot of scope for improvements. You can try out following things and see if it gives you better results:</p>
+
+<ul>
+<li>Try changing NN structure by adding/removing neurons or adding layers ( for more layers you might need more data )</li>
+<li>Try a different NN architecture such as <a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolution NN</a></li>
+<li>Try using a bigger dataset</li>
+<li>Try data augmentation techniques to increase size of dataset such as flipping some images, changing color, resizing etc.</li>
+<li>Try using <a href="https://towardsdatascience.com/batch-normalization-in-neural-networks-1ac91516821c">batch normalization</a>, <a href="https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5">dropouts</a> and other regularization techniques</li>
+<li>Try <a href="https://www.coursera.org/learn/convolutional-neural-networks/lecture/4THzO/transfer-learning">transfer learning</a> on already trained NN</li>
+</ul>
+
+<p>I also used this model to make a realtime application which detect faces and classify them as male or female on a live camera feed. You can read more about it <a href="/post/neural-network/live-gender-classification/">here</a>.</p>
 
     </div>
 
@@ -519,6 +510,11 @@ print([&quot;male&quot; if i[&quot;output&quot;] else &quot;female&quot; for i i
       
       <nav class="post-nav">
         
+          <a class="prev" href="/post/neural-network/live-gender-classification/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Live Gender Classification</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         
       </nav>
     </footer>
@@ -553,7 +549,9 @@ print([&quot;male&quot; if i[&quot;output&quot;] else &quot;female&quot; for i i
 
   <span class="copyright-year">
     &copy; 
-    2018
+    
+      2018 - 
+    2019
     <span class="heart">
       <i class="iconfont icon-heart"></i>
     </span>
