@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Realtime Face Attribute Detection - Cylopsis- an elucidation of ML</title>
+  <link rel="alternate" hreflang="en" href="http://cylopsis.com/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<meta name="author" content="Jagpreet Singh Chawla" />
+  <meta name="description" content="In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go." />
+
+  <meta name="keywords" content="ML, Neural Networks, Blog, tensor flow" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+
+
+<link rel="canonical" href="http://cylopsis.com/post/computer-vision/face-attribute-detection/" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="Realtime Face Attribute Detection" />
+<meta property="og:description" content="In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://cylopsis.com/post/computer-vision/face-attribute-detection/" />
+<meta property="article:published_time" content="2019-01-25T12:52:08-05:00"/>
+<meta property="article:modified_time" content="2019-01-25T12:52:08-05:00"/>
+
+<meta itemprop="name" content="Realtime Face Attribute Detection">
+<meta itemprop="description" content="In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go.">
+
+
+<meta itemprop="datePublished" content="2019-01-25T12:52:08-05:00" />
+<meta itemprop="dateModified" content="2019-01-25T12:52:08-05:00" />
+<meta itemprop="wordCount" content="3426">
+
+
+
+<meta itemprop="keywords" content="object-detection,convolution-nn,computer-vision," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Realtime Face Attribute Detection"/>
+<meta name="twitter:description" content="In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Cylopsis</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">Cylopsis</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        
+        <a class="menu-item-link" href="/">Home</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/post/">Archives</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/tags/">Tags</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/categories/">Categories</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/about/">About</a>
+        
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Realtime Face Attribute Detection</h1>
+      
+      <div class="post-meta">
+        <span class="post-time"> 2019-01-25 </span>
+        <div class="post-category">
+            
+              <a href="/categories/computer-vision/"> computer-vision </a>
+            
+          </div>
+        <span class="more-meta"> 3426 words </span>
+        <span class="more-meta"> 17 min read </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#outline">Outline</a></li>
+<li><a href="#dataset">Dataset</a>
+<ul>
+<li><a href="#data-pre-processing">Data Pre-processing</a>
+<ul>
+<li><a href="#reading-files-and-metadata">Reading files and Metadata</a></li>
+<li><a href="#filtering-images">Filtering images</a></li>
+<li><a href="#resizing-images">Resizing images</a></li>
+<li><a href="#multithreaded-processing">Multithreaded processing</a></li>
+<li><a href="#tfrecord-file-format">TFRecord File Format</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#nn-model">NN Model</a>
+<ul>
+<li><a href="#activation-functions">Activation Functions</a></li>
+<li><a href="#loss-function">Loss function</a></li>
+</ul></li>
+<li><a href="#performance">Performance</a></li>
+<li><a href="#model-comparison">Model Comparison</a></li>
+<li><a href="#next-steps">Next Steps</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>In my article about <a href="/post/computer-vision/object-detection-approaches/">object detection approaches</a>, I mentioned a few ways to handle object detection and introduced <a href="https://arxiv.org/abs/1506.02640">YOLO</a> NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my <a href="/post/computer-vision/live-gender-classification/">live gender classifier</a> to use only one NN to detect as well as classify faces in one single go. Although YOLO has more details than this, for now this is the only thing I decided to focus on. In this article, I will give an overview of my project and how I implemented it.</p>
+
+<h1 id="outline">Outline</h1>
+
+<p>In my previous <a href="/post/computer-vision/live-gender-classification/">article</a>, I used an OpenCV cascade classifier to detect faces and a trained Neural Network to classify them. The model was limited to the front view of the face and doesn&rsquo;t work on other views. This project tries to remove this limitation by using a YOLO style regression model.</p>
+
+<p>The aim of the project was to experience this new approach and does <code>NOT</code> focus on getting good detection or classification accuracy. We will see how the classification by this model compares to individual models (with similar architecture) trained to just classify the detected faces instead of classifying and detecting faces at the same time as done in YOLO and in this project.</p>
+
+<p>I will go over all the steps of the project but will not go over code here. Feel free to check my GitHub for the code. The complete code for this project can be found <a href="https://github.com/jagpreetschawla/realtime-face-attribute-detection">here</a>.</p>
+
+<h1 id="dataset">Dataset</h1>
+
+<p>I am using <a href="https://data.vision.ee.ethz.ch/cvl/rrothe/imdb-wiki/">imdb-wiki face dataset</a>. The dataset is around 250 GB with about 520,000 images! As the name implies, the dataset is gathered using celebrity images from IMDB and Wikipedia websites. The images are provided as it is, that is, it has not been cropped or pre-processed (although cropped face images are available for anyone who needs them). Each image has metadata associated with it, which is provided as a separate file. It contains the date when the photograph was taken, date of birth of the celebrity, face location (as detected by an automated algorithm), and gender.</p>
+
+<p>The dataset is quite big and the files are provided in parts as different downloads. There are 10 parts for IMDB images and 1 for wiki images. For our toy project, we don&rsquo;t really need so much data but we can&rsquo;t test anything with only a few images either. So I used only 1 part of IMDB images (part 0), which is around 27 GB and contains sufficient images for our use case.</p>
+
+<h2 id="data-pre-processing">Data Pre-processing</h2>
+
+<p>Before we can use the dataset, we need to process it to extract the metadata, remove corrupted or unrequired images, and convert the data into required dimensions and format. I preprocessed the data and merged all the required details in a small set of files. My program then uses these files instead of raw data. Let&rsquo;s go over the details.</p>
+
+<p>You can find complete script used for preprocessing <a href="https://github.com/jagpreetschawla/realtime-face-attribute-detection/blob/master/process_data.py">here</a>. You can call the script with <code>-h</code> option to see all available options. The script produces <code>.tfrecord</code> files, the details are mentioned below. It also provides an option to produce cropped faces which I used to train a NN for comparison.</p>
+
+<h3 id="reading-files-and-metadata">Reading files and Metadata</h3>
+
+<p>The dataset is provided in tar files. We can either extract the tar or directly process the tar file using <code>tarfile</code> python module. The metadata is provided in a <code>mat</code> file and we can use <code>scipy.io.sio</code> from <code>scipy</code> module which has a <code>loadmat</code> function to handle such files. It returns an object which can be used to directly access each column as a numpy object arrays.</p>
+
+<p>Since I am using only a part of the data, I iterate over all images in the folder or tar file instead of the metadata file and only process the files for which I successfully find the metadata. I am using the date of birth and the date when photo was taken to find the age. I save the age, gender and face location (bounding box top left and bottom right coordinates) along with the images. Check out my code for details.</p>
+
+<h3 id="filtering-images">Filtering images</h3>
+
+<p>We need to ignore some of the images since some of the images are missing metadata while some images are corrupted or too small to be useful. So I remove the following images:</p>
+
+<ul>
+<li>Images for which gender or age is not available.</li>
+<li>Images in age group below 10 or over 80 are very rare and hence are not useful (since I will be training to predict age and there is not sufficient data for these groups), so I ignore them too.</li>
+<li>If there is an image which has face bounding box size larger than the image itself or if one of the bounding box coordinates lie outside of the image.</li>
+<li>Images for which the face confidence score is low (since these are automatically located using an algorithm, they also provide confidence as provided by used algorithm).</li>
+<li>Images for which confidence is missing (if any).</li>
+<li>Images which have multiple faces (the dataset provides second face confidence to check for these)</li>
+<li>Images which are smaller than a threshold (in either dimension). There are some images which are invalid (or corrupted) and contains some random white pixels. Luckily, all of them are too small and hence this takes care of them too.</li>
+</ul>
+
+<blockquote>
+<p>Note: Although we take images with just one face, it is entirely for ease of training. The way NN is structured allows it to detect multiple faces and the way we train it (by dividing the input into grid same as <a href="https://arxiv.org/abs/1506.02640">YOLO</a>), it will detect multiple faces even if we train it for just 1 face. This is because each face prediction in our model is independent of any other prediction done by NN.</p>
+</blockquote>
+
+<p>Some of the images are removed by one of these checks. Some of the remaining images might still not be perfect (some images still have multiple faces) but these are in minority and we can ignore them for now.</p>
+
+<h3 id="resizing-images">Resizing images</h3>
+
+<p>Although I will be using a fully convolutional network which doesn&rsquo;t care about input size, we still need to use a fixed size in order to train it using multiple images in a single batch (all images have to be of the same size to form a matrix).<a href="https://pjreddie.com/darknet/yolov2/">YOLOv2</a> combines same size image together and uses a batch of same size images but different batch has different image sizes. But we won&rsquo;t be doing that for simplicity.</p>
+
+<p>I resized all of the images to 250x250. Since all images have a different aspect ratio, I padded the image with black pixels to maintain its aspect ratio as I resize it. So all input images are 250x250, and if needed, are padded with black color so the aspect ratio is preserved for actual image data.</p>
+
+<h3 id="multithreaded-processing">Multithreaded processing</h3>
+
+<p>We need to process a lot of files and we can easily speed this by utilizing multiple cores that most of the systems have. One simple way to do that will be to use threads. Although python does have threads, unfortunately, python (cpython) threads don&rsquo;t use multiple cores and everything runs on a single CPU. So we don&rsquo;t really see much improvement using python threads. Instead, I will use the <code>multiprocessing</code> module which provides similar API but uses processes instead of threads.</p>
+
+<p>I divide the program into a few producer threads and few consumer threads. They interact with each other using shared queues. The main thread pushes file paths to producer threads, which read the image file and associated metadata. This data is then pushed to consumer threads which process and resize the image and write them to a output file in the required format. The data is written as <code>tfrecord</code> file.</p>
+
+<h3 id="tfrecord-file-format">TFRecord File Format</h3>
+
+<p>To train our model, our program will need to read a lot of input data. We don&rsquo;t want file IO to be a bottleneck. If we are using tensorflow, one way to solve this would be to use a <code>tfrecord</code> file. Tfrecord is a file format designed by tensorflow for sequential data. Since we just need to iterate over data for training and don&rsquo;t need any random access, we can easily use tfrecord format. By storing everything in 1 file, we avoid multiple file lookups. Also, tensorflow provides methods to read tfrecord file for training in an optimized way.</p>
+
+<p>Tfrecord file can store any numerical in form of Tensorflow features, which is an array of numbers. So we can store 2 features per element, one for input and 1 for expected output. That way we can quickly and efficiently get both input and output during training by just iterating over this file.</p>
+
+<p>To simplify things, each consumer thread in our code will produce a separate tfrecord file. Therefore instead of 1 big tfrecord file, we will have 10 of them. This makes transferring files (if needed) easier and also makes it easy for use to separate out test data. We can simply choose 1 of them as test file. 10 is way less then 10000s of files we need to read, hence its still efficient.</p>
+
+<p>Tensor flow provides functions to easily create tfrecord files. Check out my <a href="https://github.com/jagpreetschawla/realtime-face-attribute-detection/blob/master/process_data.py">code</a> for more details.</p>
+
+<h1 id="nn-model">NN Model</h1>
+
+<p>As mentioned before, I planned to use a regression technique similar to one introduced by <a href="https://arxiv.org/abs/1506.02640">YOLO</a>. I divided my input image into a grid (not literally, in an abstract way to interpret the output), each grid box predicts 1 bounding box in terms of box center coordinates and its width and height. This is different than YOLO where they predict multiple boxes per grid cell. They had to predict different types of boxes as YOLO is designed for general object detection. Here we are just detecting faces which are mostly similar in terms of aspect ratio so 1 box should be enough for us.</p>
+
+<p>Similar to YOLO, along with box we also predict a confidence score which tells us how confident the grid cell is that there is a face. The grid cell which has the center of a face is responsible for detecting it with high confidence. All other grid cells should have low confidence. For more details checkout <a href="https://arxiv.org/abs/1506.02640">YOLO</a> paper or my quick overview of YOLO <a href="/post/computer-vision/object-detection-approaches/">here</a>.</p>
+
+<p>YOLO also predicts conditional probabilities which describes that given there is an object center in the grid cell, what is the probability that it is an object <code>O</code>. We will use the same concept for face classification. I am using 2 different classifiers. One gives us the probability that a face is <code>male</code> or <code>female</code> given there is a face. Other gives us the probability that person is in the age group 10-20, 20-30, 30-40 etc. given there is a face.</p>
+
+<p>Since our outputs are structured in 3D, in form of 2D grid and several outputs per grid, we can actually use just convolution layers (with pooling) without any fully connected layer at the end (since convolution directly gives us 3D output). A similar concept was used in <a href="https://pjreddie.com/darknet/yolov2/">YOLOv2</a>, although it had a lot of other details as well, we will just try a simple convolution structure. So our model is a pure CNN.</p>
+
+<p>To get the desired number of Grid Cells, we will use convolutions with the <code>SAME</code> padding and will use a calculated number of max pool layers in between such that the final output has exactly same number of pixels as our number of grid cells. So each pixel represents outputs of 1 grid cell.</p>
+
+<p>To get the desired number of outputs per grid cell, we will be using <code>1x1</code> convolutions to reduce the number of filters to exactly the number of outputs we need.</p>
+
+<p>I used 5 max-pool layers. My final NN architecture is:</p>
+
+<h2 id="activation-functions">Activation Functions</h2>
+
+<p>All layers of my Neural Network are using a <code>ReLU</code> activation, except for the last <code>1x1</code> convolution layer. For my last layer, each filter uses a different activation based on what it is trying to predict. For each of the output, activation is as follows:</p>
+
+<ul>
+<li><em>Confidence for the box</em>: <code>sigmoid</code> since the output is a score between 0 to 1.</li>
+<li><em>Width and height of the box</em>: <code>exponential</code> since I am trying to regress absolute width and height which can be large numbers. I tried others like ReLU, exponential just worked better.</li>
+<li><em>Center of the box</em>: <code>sigmoid</code> since the center is relative to grid cell and is between 0 and 1.</li>
+<li><em>Gender classification probabilities</em>: <code>Relu</code> followed by <code>softmax</code>.</li>
+<li><em>Age classification probabilities</em>: <code>ReLU</code> followed by <code>softmax</code>.</li>
+</ul>
+
+<h2 id="loss-function">Loss function</h2>
+
+<p>Original YOLO had squared error based loss function. I tried it but it requires fine-tuning of weights for different parts of the loss function (which part should impose more penalty). After trying a few times, I shifted to my custom loss function which is quite simple and worked well (comparatively). I just took the sum of an average loss of each output and used a popular loss function for each output based on its type. In short, my loss function is the sum of following independent losses:</p>
+
+<ul>
+<li><em>Confidence for the box</em>: average <code>log loss</code> since it is a confidence score. So we want high penalty if its guess is totally off.</li>
+<li><em>Width and height of the box</em>: average <code>mean squared error</code> since it is a regression</li>
+<li><em>Center of the box</em>: average <code>mean squared error</code> since it is a regression</li>
+<li><em>Gender classification probabilities</em>: average <code>softmax cross entropy</code> which is standard for softmax based probabilities</li>
+<li><em>Age classification probabilities</em>: average <code>softmax cross entropy</code> which is standard for softmax based probabilities</li>
+</ul>
+
+<p><code>Average</code> above refers to average of loss for all grid cells.</p>
+
+<p>The above calculated loss depends on whether a cell has a face center or not, same as YOLO. In other words, width, height, and center loss are considered only for cells which actually have a face center. Same for classification probabilities since all of these are conditional on the face. A face will have a center, width or gender only if there is a face in the first place. So the only penalty which we consider for the cells which do not have a face is the confidence score since they are supposed to give 0 confidence if there is no face.</p>
+
+<p>Since we filtered our dataset to have images with only 1 face, other than confidence all losses will be ignored for all cells except one (which has a face center). So while taking an average for these, we are effectively dividing by 1. Taking average is not actually doing anything here except for confidence, which is a valid loss for each grid cell and hence will be averaged by dividing by the number of cells. I thought of a general loss function so that it is valid even if I decide to train on images with multiple faces. With this particular dataset, we can ignore all average other than confidence.</p>
+
+<h1 id="performance">Performance</h1>
+
+<p>To evaluate the model, I used <a href="https://en.wikipedia.org/wiki/Jaccard_index">IOU (intersection over union)</a> metric for bounding boxes and accuracy for classification. The model achieved following metrics:</p>
+
+<ul>
+<li><em>IOU</em>: 0.634</li>
+<li><em>Gender Accuracy</em>: 0.781</li>
+<li><em>Age Accuracy</em>: 0.341</li>
+</ul>
+
+<blockquote>
+<p>Note: The accuracy in calculations include the cases where it doesn&rsquo;t find a face. So it actually measures how many faces does it correctly identifies. If it doesn&rsquo;t detect a face in the first place, it also affects this accuracy. If we just check for faces where it detected the face, accuracy might actually be higher.</p>
+</blockquote>
+
+<p>We can see that the model has decent performance for detection and gender classification. It does poorly in age classification but that is not because of the approach, but because of some other inherent problem. As we will see in the following section, an independent convolutional model trained to just classify faces based on age also performs poorly. This is due to the fact that the data is very imbalanced with respect to age. Majority of data is in the age group <code>30-40</code>. This can be seen in my data exploration for this dataset <a href="https://github.com/jagpreetschawla/realtime-face-attribute-detection/blob/master/Data_exploratory.ipynb">here</a>. So the model gets biased towards this and predicts <code>30-40</code> most of the time. So we need to apply techniques related to an imbalanced dataset to fix this and this should not be considered a drawback of the NN model or loss function.</p>
+
+<p>Now let&rsquo;s look at how it compares to normal (non-YOLO style regression) classification models which are trained only to classify a face as compared to detecting as well as classifying a face.</p>
+
+<h1 id="model-comparison">Model Comparison</h1>
+
+<p>I trained independent convolution NN models with similar architecture, activations and corresponding loss to just classify a face instead of trying to do all things at once. Using separate models will be slow as we will need a different model to detect the face so that these models can classify it. In comparison, our YOLO based approach does everything at once and hence is easier to train and is faster. Here we will see how they compare just in terms of classification performance.</p>
+
+<p>For these classification models, I used the same preprocessing script but to get cropped faces instead of the full image. These models will then classify these faces.</p>
+
+<p>These classification models have less number of layers (as they are working on a simpler problem and performed better with fewer layers). But even then, our single model will run faster as it still has fewer layers and filters compared to using 3 different models for all 3 tasks.</p>
+
+<p>These independent models achieved the following metrics:</p>
+
+<ul>
+<li><em>Gender classification</em> model accuracy: 0.834</li>
+<li><em>Age classification</em> model accuracy: 0.364</li>
+</ul>
+
+<p>We see here that these models performed better than our single model. But, we should also keep in mind that these models already had correct faces, whereas our model had to detect faces before classifying. Therefore, if our model&rsquo;s face detection improves, it will automatically improve the classification performance as some of the faces were not classified correctly as they were not detected correctly. The same applies here as well. Here we passed the ground truth images for faces to these model. Had there been an actual face detection model in place, all faces would not have been 100% correct and hence the classification accuracy would drop. So in real the scenario, the accuracy will be lower than this.</p>
+
+<p>Also, we can see here that even the independent model performs poor for age classification. As explained above, this is due to an imbalanced dataset with respect to age and affects both our models.</p>
+
+<p>In conclusion, even though independent models performed better but their accuracy will drop if we use a face detection algorithm to first detect faces. Hence for complete detection + classification pipeline, the performance by these models is not drastically better than our single model but our model is faster and hence better for real-time use cases. This shows that the approach used in this project actually works and is applicable in such scenarios.</p>
+
+<h1 id="next-steps">Next Steps</h1>
+
+<p>We have successfully seen how the YOLO style regression approach is applied for detection and by using comparison have concluded that the approach is applicable and can be successfully used in detection + classification scenarios. The aim of the project was <em>NOT</em> to get good accuracy and hence has neglected a lot of details and techniques that could have been used to get even better results. Some of them are already mentioned and used in original YOLO architecture but we chose to ignore them in this project. Few of the things that could or should have been used are:</p>
+
+<ul>
+<li>Experimenting with the NN parameters to improve results</li>
+<li>Predict width and height of the bounding box relative to the image size. This shrinks the range of output between 0-1 and was done in YOLO.</li>
+<li>Predict \(\sqrt{width}\) and \(\sqrt{height}\) instead of width and height so that the bounding box error for large boxes is not as significantly penalized as for small boxes (since compared to large box small error is acceptable which is not the case for small boxes). This was done in YOLO.</li>
+<li>Use techniques such as weighted loss or oversampling to handle imbalanced dataset with respect to age.</li>
+<li>Use more data (we used only a part of available data).</li>
+<li>Pre-train network on some related classification before using for this task. This approach is suggested and used in YOLO.</li>
+<li>Either use previous layer&rsquo;s filters (similar to YOLOv2) or use a fully connected layer (similar to YOLO) for final prediction. Right now final layer doesn&rsquo;t use context from every pixel of the input image.</li>
+</ul>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/object-detection/">object-detection</a>
+          
+          <a href="/tags/convolution-nn/">convolution-nn</a>
+          
+          <a href="/tags/computer-vision/">computer-vision</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/computer-vision/object-detection-approaches/">
+            <span class="next-text nav-default">Object Detection Approaches</span>
+            <span class="prev-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+    
+
+  
+
+  
+
+  
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:jagpreet@cylopsis.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.linkedin.com/in/jagpreet-singh-chawla-427121104/" rel="me" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/jagpreetschawla" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="http://cylopsis.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jagpreet Singh Chawla</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+
+
+
+
+</body>
+</html>

@@ -14,10 +14,10 @@
     
     <item>
       <title>Live Gender Classification</title>
-      <link>http://cylopsis.com/post/neural-network/live-gender-classification/</link>
+      <link>http://cylopsis.com/post/computer-vision/live-gender-classification/</link>
       <pubDate>Mon, 03 Sep 2018 15:45:28 +0530</pubDate>
       
-      <guid>http://cylopsis.com/post/neural-network/live-gender-classification/</guid>
+      <guid>http://cylopsis.com/post/computer-vision/live-gender-classification/</guid>
       <description>In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification.</description>
     </item>
     

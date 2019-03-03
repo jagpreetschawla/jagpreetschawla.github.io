@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Convolution Nn on Cylopsis- an elucidation of ML</title>
+    <link>http://cylopsis.com/tags/convolution-nn/</link>
+    <description>Recent content in Convolution Nn on Cylopsis- an elucidation of ML</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>Jagpreet Singh Chawla</copyright>
+    <lastBuildDate>Fri, 25 Jan 2019 12:52:08 -0500</lastBuildDate>
+    
+	<atom:link href="http://cylopsis.com/tags/convolution-nn/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Realtime Face Attribute Detection</title>
+      <link>http://cylopsis.com/post/computer-vision/face-attribute-detection/</link>
+      <pubDate>Fri, 25 Jan 2019 12:52:08 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/post/computer-vision/face-attribute-detection/</guid>
+      <description>In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go.</description>
+    </item>
+    
+  </channel>
+</rss>

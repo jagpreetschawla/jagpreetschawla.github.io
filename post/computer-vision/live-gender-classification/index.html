@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Live Gender Classification - Cylopsis- an elucidation of ML</title>
+  <link rel="alternate" hreflang="en" href="http://cylopsis.com/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<meta name="author" content="Jagpreet Singh Chawla" />
+  <meta name="description" content="In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification." />
+
+  <meta name="keywords" content="ML, Neural Networks, Blog, tensor flow" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+
+
+<link rel="canonical" href="http://cylopsis.com/post/computer-vision/live-gender-classification/" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="Live Gender Classification" />
+<meta property="og:description" content="In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://cylopsis.com/post/computer-vision/live-gender-classification/" />
+<meta property="article:published_time" content="2018-09-03T15:45:28&#43;05:30"/>
+<meta property="article:modified_time" content="2018-09-03T15:45:28&#43;05:30"/>
+
+<meta itemprop="name" content="Live Gender Classification">
+<meta itemprop="description" content="In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification.">
+
+
+<meta itemprop="datePublished" content="2018-09-03T15:45:28&#43;05:30" />
+<meta itemprop="dateModified" content="2018-09-03T15:45:28&#43;05:30" />
+<meta itemprop="wordCount" content="2381">
+
+
+
+<meta itemprop="keywords" content="tensorflow,tensorflow-serving,classifier," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Live Gender Classification"/>
+<meta name="twitter:description" content="In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Cylopsis</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">Cylopsis</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        
+        <a class="menu-item-link" href="/">Home</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/post/">Archives</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/tags/">Tags</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/categories/">Categories</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/about/">About</a>
+        
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Live Gender Classification</h1>
+      
+      <div class="post-meta">
+        <span class="post-time"> 2018-09-03 </span>
+        <div class="post-category">
+            
+              <a href="/categories/computer-vision/"> computer-vision </a>
+            
+          </div>
+        <span class="more-meta"> 2381 words </span>
+        <span class="more-meta"> 12 min read </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#outline">Outline</a>
+<ul>
+<li><a href="#prerequisites">Prerequisites</a></li>
+<li><a href="#requirements">Requirements</a></li>
+</ul></li>
+<li><a href="#exporting-the-model">Exporting the model</a>
+<ul>
+<li><a href="#defining-export-outputs">Defining export outputs</a></li>
+<li><a href="#exporting-the-model-into-a-directory">Exporting the model into a directory</a></li>
+</ul></li>
+<li><a href="#serving-the-model">Serving the model</a></li>
+<li><a href="#creating-the-live-classifier">Creating the live classifier</a>
+<ul>
+<li><a href="#a-note-on-code-design">A note on code design</a></li>
+<li><a href="#importing-requirements">Importing requirements</a></li>
+<li><a href="#defining-the-model-for-face-detection">Defining the model for face detection</a></li>
+<li><a href="#requesting-a-prediction-from-tensorflow-serving">Requesting a prediction from tensorflow_serving</a></li>
+<li><a href="#detecting-faces-in-an-image">Detecting faces in an image</a></li>
+<li><a href="#prediction-process">Prediction process</a></li>
+<li><a href="#main-process">Main process</a></li>
+</ul></li>
+<li><a href="#next-steps">Next Steps</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>In my article <a href="/post/computer-vision/gender-classification/">Gender Classification</a>, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification. Complete code can be found <a href="https://github.com/jagpreetschawla/live_gender_classifier">here</a>.</p>
+
+<figure class="center">
+    <img src="/img/live_gender_classifier.png"/> 
+</figure>
+
+
+<h1 id="outline">Outline</h1>
+
+<p>We will be exporting the model trained in <a href="/post/computer-vision/gender-classification/">Gender Classification</a> by adding few lines to the code. Then, we will setup tensorflow-serving server to serve this model using docker ( you can also set it up on your system instead of using docker ). Next, we will write a code to detect faces on a live camera feed using OpenCV and classify them as male or female using our NN. Since the focus of this article is to look at tensorflow-serving and classify faces, we won&rsquo;t cover face detection in depth and will use a basic pre-trained OpenCV classifier instead.</p>
+
+<p>You can find the complete code <a href="https://github.com/jagpreetschawla/live_gender_classifier">here</a>. I will not go through the code for training the NN as I already did that in <a href="/post/computer-vision/gender-classification/">Gender Classification</a>.</p>
+
+<h2 id="prerequisites">Prerequisites</h2>
+
+<p>To understand this article, you should already know or familiar with:</p>
+
+<ul>
+<li>Python 2.7</li>
+<li>virtualenv in python</li>
+<li>tensorflow</li>
+<li>Neural Network (NN) and backpropagation</li>
+<li>Estimators and its specifications (EstimatorSpec) in TensorFlow</li>
+</ul>
+
+<p>Also, I will encourage you to have a look at <a href="/post/computer-vision/gender-classification/">Gender Classification</a>, as most of above points are covered there.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>Apart from requirements covered <a href="/post/computer-vision/gender-classification/#outline">here</a>, we will need:</p>
+
+<ul>
+<li>Docker</li>
+<li>OpenCV for python (version 3.4.0.12)</li>
+<li>tensorflow-serving-api for python (version 1.6.0)</li>
+<li>grpcio for python (version 1.10.1)</li>
+</ul>
+
+<p>To install Docker please visit <a href="https://www.docker.com/community-edition">Docker&rsquo;s website</a> and follow the instructions for your system. Make sure docker is running on your system.</p>
+
+<p>To install python requirements, please run following commands inside your python virtualenv:</p>
+
+<pre><code>(venv)$ pip install opencv==3.4.0.12 tensorflow-serving-api==1.6.0 grpcio==1.10.1
+</code></pre>
+
+<h1 id="exporting-the-model">Exporting the model</h1>
+
+<p>For exporting the model, we need to define what output our final model needs to return. This has to be done while defining the model. Then we can train our model, and export it into a directory. This directory will be used by tensorflow-serving to serve our model.</p>
+
+<h2 id="defining-export-outputs">Defining export outputs</h2>
+
+<p>We already defined the export outputs when we defined our <a href="/post/computer-vision/gender-classification/#defining-our-nn">model function</a> by defining <code>export_outputs</code> in prediction specifications:</p>
+
+<pre><code class="language-python">if mode == tf.estimator.ModeKeys.PREDICT:
+        return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions,
+                                          export_outputs={
+                                              &quot;prediction&quot;: tf.estimator.export.ClassificationOutput(
+                                                  scores=predictions[&quot;prob&quot;]
+                                              )
+                                          })
+</code></pre>
+
+<p>TensorFlow provides following classes for defining export outputs:</p>
+
+<ul>
+<li>tf.estimator.export.ClassificationOutput</li>
+<li>tf.estimator.export.PredictOutput</li>
+<li>tf.estimator.export.RegressionOutput</li>
+</ul>
+
+<p>All of the above are a subclass of <code>tf.estimator.export.ExportOutput</code>. I will recommend using <code>ClassificationOutput</code> or <code>RegressionOutput</code> than more general <code>PredictOutput</code> class wherever possible.</p>
+
+<p>The export outputs have to be defined using one of the above classes. You can return multiple outputs if required.</p>
+
+<p>Since our model is doing a classification, we returned <code>tf.estimator.export.ClassificationOutput</code> and named the output as <code>prediction</code>. We passed <code>predictions[&quot;prob&quot;]</code> as <code>scores</code> which contains the probabilities/scores of each class (male and female).</p>
+
+<h2 id="exporting-the-model-into-a-directory">Exporting the model into a directory</h2>
+
+<p>Once we have trained our model and we are satisfied with its performance, we can export it by running the following code:</p>
+
+<pre><code class="language-python">mf_classifier.export_savedmodel(&quot;./models/NN/&quot;,
+                                tf.estimator.export.build_parsing_serving_input_receiver_fn({
+                                    &quot;x&quot;: tf.FixedLenFeature(shape=[25,25], dtype=tf.float32)
+                                }))
+</code></pre>
+
+<p>This will export the model in directory <code>models/NN/</code>. Each export call saves the model with a timestamp. When we serve a model, tensorflow_serving picks the latest model based on this timestamp. We also need to define what inputs our model accept by providing <code>tf.estimator.export.build_parsing_serving_input_receiver_fn({&quot;x&quot;: tf.FixedLenFeature(shape=[25,25], dtype=tf.float32)})</code> as a parameter. Here we are telling TensorFlow that we will send an input as <code>x</code>, which will have a shape of <code>[25,25]</code>, and datatype of <code>float32</code>. <code>tf.estimator.export.build_parsing_serving_input_receiver_fn</code> tells the TensorFlow that we will send the input as a serialized string according to TensorFlow&rsquo;s <code>Example</code> protocol. This might seem confusing, but this is the easiest way to set up our model.</p>
+
+<h1 id="serving-the-model">Serving the model</h1>
+
+<p>For serving the model, we need tensorflow-serving. Instead of setting it up, we will be using a docker image <code>jagpreets/tensorflow-serving</code>. Please ensure that you have docker running on your system. This docker image has everything ready and you just need to specify the port number and exported model directory while running it:</p>
+
+<pre><code>docker run -d -p &lt;port&gt;:9000 -v &lt;exported model directory&gt;:/model jagpreets/tensorflow-serving:v0
+</code></pre>
+
+<p>This will download the docker image if it doesn&rsquo;t exist and run it. This might take time depending on your internet speed. If you want to see the corresponding dockerfile, you can find it in my GitHub repository <a href="https://github.com/jagpreetschawla/useful_docker_files/blob/master/tensorflow-serving.devel">here</a></p>
+
+<p>Replace <code>&lt;port&gt;</code> with the port number, and <code>&lt;exported model directory&gt;</code> with complete path to your exported model directory. For example, I wanted to run it at port number 9000, so for me the command was <code>docker run -d -p 9001:9000 -v /Users/jagpreet/live_gender_classifier/models/NN:/model jagpreets/tensorflow-serving:v0</code>.</p>
+
+<blockquote>
+<p>Note: If you use a port number other than 9000, please update the code in next section accordingly.</p>
+</blockquote>
+
+<p>After running this docker, we will have the model being served at localhost:9000 or any other port that you chose. It is a grpc server, and we can use this service using <a href="https://github.com/grpc/grpc/tree/master/src/python/grpcio">grpcio</a>.</p>
+
+<h1 id="creating-the-live-classifier">Creating the live classifier</h1>
+
+<p>We will be using OpenCV to take frames/snapshots from the camera and to detect faces. We will then resize detected faces and send them to our NN which is being served by tensorflow-serving. Once we get our predictions, we will add them to the image as boxes and text, and display the image ( for example, see the image on the top ). We will keep repeating this to get a live camera feed with our predictions. The complete code for this can be found <a href="https://github.com/jagpreetschawla/live_gender_classifier/blob/master/mf_reco_live.py">here</a>.</p>
+
+<h2 id="a-note-on-code-design">A note on code design</h2>
+
+<p>Since it might take time for NN to return the predictions ( depending on your system and complexity of NN ), running this sequentially might result in a very laggy output and stuttering of camera feed. To fix this, we will be using <strong>multiprocessing</strong> to create 2 separate processes. One process will be responsible for taking snapshots and displaying them, other will be responsible for detecting gender using our NN. We will be using a shared Queue for communicating between them. We will send a new image for detection only when we get predictions from the previous image, till then we will display the last prediction only. This way, even if our NN take time, the camera feed will appear smooth and most of the times people won&rsquo;t even notice the lag.</p>
+
+<blockquote>
+<p>Note: We are using <code>multiprocessing</code> instead of <code>threads</code> because in python threads do not give real parallelism as they are unable to utilize the available processors completely ( python always run on a single processor due to GIL as explained <a href="https://en.wikipedia.org/wiki/Global_interpreter_lock">here</a>). <code>multiprocessing</code> uses separate processes instead of threads, effectively bypassing this restriction. As a side-effect we need to use special data structures, such as a shared queue, to share data between processes.</p>
+</blockquote>
+
+<h2 id="importing-requirements">Importing requirements</h2>
+
+<p>We will be using OpenCV <code>cv2</code> for taking and manipulating images, <code>multiprocessing</code> for running 2 processes as explained above, <code>tensorflow_serving.apis</code> for creating a request for our NN served by tensorflow_serving, and <code>grpc</code> for requesting output from tensorflow_serving.</p>
+
+<pre><code class="language-python">import cv2
+from multiprocessing import Process, Queue
+
+from tensorflow_serving.apis import prediction_service_pb2
+from tensorflow_serving.apis import classification_pb2
+from grpc.beta import implementations
+</code></pre>
+
+<h2 id="defining-the-model-for-face-detection">Defining the model for face detection</h2>
+
+<p>We will be using a pre-trained cascade classifier model, which is provided by OpenCV, to detect faces. The pre-trained classifier is provided as an XML file, you can get it from my GitHub repository <a href="https://github.com/jagpreetschawla/live_gender_classifier/blob/master/models/opencv/haarcascade_frontalface_default.xml">here</a>.</p>
+
+<p>To load the classifier we run:</p>
+
+<pre><code class="language-python">face_cascade = cv2.CascadeClassifier('./models/opencv/haarcascade_frontalface_default.xml')
+</code></pre>
+
+<p>Make sure the XML file on your system. Change <code>./models/opencv/haarcascade_frontalface_default.xml</code> to the location of the XML file if required.</p>
+
+<blockquote>
+<p>Note: As the name of the XML file suggests, this model only detects the front view of a face and will not detect a face if you are looking even slightly left/right or up/down. We are not looking at more robust face detection as the NN we are using to classify faces is trained only on front view of faces, so this model perfectly satisfies our requirements.</p>
+</blockquote>
+
+<h2 id="requesting-a-prediction-from-tensorflow-serving">Requesting a prediction from tensorflow_serving</h2>
+
+<p>We define a function which takes a image of face as input ( size should be 25X25 ), and returns the prediction classifying the image as male or female.</p>
+
+<pre><code class="language-python">def get_prediction(img):
+    channel = implementations.insecure_channel(&quot;localhost&quot;, 9000)
+    stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
+    request = classification_pb2.ClassificationRequest()
+    request.model_spec.name = &quot;default&quot;
+
+    example = request.input.example_list.examples.add()
+    example.features.feature['x'].float_list.value.extend(img.flatten())
+
+    result = stub.Classify(request, 5.0).result.classifications[0]  # 5 secs timeout
+
+    return &quot;male&quot; if result.classes[0].score &lt; result.classes[1].score else &quot;female&quot;
+</code></pre>
+
+<p>The code is straightforward. First few lines create a connection with tensorflow_serving, which is running at port 9000 ( inside our docker ) and creates a request object. We also specify which model to use for prediction by defining <code>model_spec.name</code>. Our tensorflow_serving is serving only one model, and it is named as <code>default</code> ( tensorflow_serving name the model as default unless we specify a different name ).</p>
+
+<p>Next, we define our input in form of a <code>example</code> object ( <code>example</code> is a protocol defined by tensorflow for serializing data ). We add a new example object <code>request.input.example_list.examples.add()</code>, and define our inputs <code>x</code> as float by flattening the image array ( converting it into 1D array ) <code>example.features.feature['x'].float_list.value.extend(img.flatten())</code>.</p>
+
+<p>Then, we simply classify the input by calling <code>stub.Classify</code>. This returns a response object. Our result will be available in <code>result.classifications</code> in response, which will be an array and we need only the first element. We can check scores/probabilities of each class <code>i</code> from <code>result.classes[i].score</code>. Our function return <em>male</em> or <em>female</em> depending on which probability is greater.</p>
+
+<h2 id="detecting-faces-in-an-image">Detecting faces in an image</h2>
+
+<p>We define a function which takes a single channel gray scale image, and returns coordinates of all detected faces as a tuple <em>((top_left_x, top_left_y), (bottom_right_x, bottom_right_y))</em>.</p>
+
+<pre><code class="language-python">def get_faces(img_gray):
+    faces = face_cascade.detectMultiScale(img_gray, 1.3, 5)
+    detected_rect = []
+    for (x, y, w, h) in faces:
+        detected_rect.append(((x,y),(x+w,y+h)))
+    return detected_rect
+</code></pre>
+
+<p>The code is straightforward. We call <code>face_cascade.detectMultiScale</code> ( <code>face_cascade</code> was defined above ), it returns all faces as <em>(top_left_x, top_left_y, width, height)</em>. We then convert it into required format, and return all coordinates.</p>
+
+<h2 id="prediction-process">Prediction process</h2>
+
+<p>Now we define a function which will be run on our prediction process ( created using multiprocessing ).</p>
+
+<pre><code class="language-python">def prediction_thread(inp_q, pred_q):
+    while True:
+        inp = inp_q.get()
+        if inp is None:
+            return
+        img, faces = inp
+        predictions = []
+        for i in faces:
+            inp = cv2.resize(img[i[0][1]:i[1][1], i[0][0]:i[1][0]], dsize=(25,25))
+            predictions.append((i, get_prediction(inp)))
+        pred_q.put(predictions)
+</code></pre>
+
+<p>This function takes 2 parameters:</p>
+
+<ul>
+<li><strong>inp_q:</strong> The shared queue will be used to send input to this process. Each element is expected to be a tuple containing an image and the coordinates of detected faces.</li>
+<li><strong>pred_q:</strong> The shared queue where we will send our predictions. The main process will read predictions from this queue.</li>
+</ul>
+
+<p>We will then read inputs <code>img, faces</code> from <code>inp_q</code> and push predictions in <code>pred_q</code> in a loop, until we get <code>None</code> as input which signals the process to stop. <code>img</code> is a single channel gray scale image. Each coordinates in <code>faces</code> is a tuple containing 2 tuples <em>((top_left_x, top_left_y), (bottom_right_x, bottom_right_y))</em> ( same as one returned by function <code>get_faces</code> in above section ).</p>
+
+<p>We iterate on all face coordinates that we got as input <code>faces</code>. For each face we get the image of the face using those coordinates <code>img[i[0][1]:i[1][1], i[0][0]:i[1][0]]</code>, resize the image into 25X25 size <code>cv2.resize</code>, get prediction <code>et_prediction(inp)</code> and put it in a list <code>predictions.append</code> along with coordinates. Then we push all predictions in <code>pred_q</code>. These will be read by main process, which will then send another input into <code>inp_q</code>.</p>
+
+<h2 id="main-process">Main process</h2>
+
+<p>Now the last part of the code, our main function:</p>
+
+<pre><code class="language-python">def main():
+    cap = cv2.VideoCapture(0)
+    inp_q = Queue(2)
+    pred_q = Queue(2)
+    pred_t = Process(target=prediction_thread, args=(inp_q, pred_q))
+    pred_t.start()
+    last_pred = []
+    pred_q.put(last_pred)
+    while True:
+        _, img = cap.read()
+        img = cv2.resize(img, fx=0.5, fy=0.5, dsize=(0, 0))
+        if not pred_q.empty():
+            last_pred = pred_q.get()
+            img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            faces = get_faces(img)
+            inp_q.put((img_gray,faces))
+        for i in last_pred:
+            pos = i[0]
+            pred = i[1]
+            cv2.rectangle(img, pos[0], pos[1], color=(255,0,0), thickness=2)
+            text_x = (pos[0][0] + pos[1][0]) / 2
+            text_y = (pos[0][1] + pos[1][1]) / 2
+            cv2.putText(img, pred, (text_x, text_y), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.8, (0,0,255), thickness=2)
+        cv2.imshow(&quot;camera&quot;, img)
+        if cv2.waitKey(1) == 27:
+            break
+    inp_q.put(None)
+    pred_t.join()
+    cap.release()
+    cv2.destroyAllWindows()
+</code></pre>
+
+<p>We first defined our video source as camera <code>cap = cv2.VideoCapture(0)</code>. Then we defined our shared queues <code>inp_q</code> and <code>pred_q</code>. Next, we defined a separate process <code>pred_t = Process(target=prediction_thread, args=(inp_q, pred_q))</code> and started this process <code>pred_t.start()</code>. This process will run the function <code>prediction_thread</code> that we defined above. Next we start a loop <code>while True:</code> which will take live feed from camera and show our predictions.</p>
+
+<p>In the loop, we will take image from camera <code>_, img = cap.read()</code> and resize it <code>img = cv2.resize(img, fx=0.5, fy=0.5, dsize=(0, 0))</code> ( since we don&rsquo;t need to process and show large image ). If we have some predictions in the <code>pred_q</code>, we will get those predictions and put them in last_pred <code>last_pred = pred_q.get()</code>, and send the current image ( as single channel gray scale ) <code>cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)</code> and faces in this image <code>faces = get_faces(img)</code> as input for prediction process in inp_q <code>inp_q.put((img_gray,faces))</code>.</p>
+
+<p>We then take our last predictions <code>last_pred</code>, draw them as rectangle for faces <code>cv2.rectangle(img, pos[0], pos[1], color=(255,0,0), thickness=2)</code> and text for predicted gender <code>cv2.putText(img, pred, (text_x, text_y), cv2.FONT_HERSHEY_SCRIPT_SIMPLEX, 0.8, (0,0,255), thickness=2)</code>. We show this on screen using <code>cv2.imshow(&quot;camera&quot;, img)</code> and if user is pressing escape <code>if cv2.waitKey(1) == 27</code> we break the loop.</p>
+
+<p>Before exiting, we tell prediction process to stop by sending None <code>inp_q.put(None)</code>, wait for it to stop <code>pred_t.join()</code>, release the camera <code>cap.release()</code> and close the display window <code>cv2.destroyAllWindows()</code>.</p>
+
+<p>Now we only thing left is to run out main function:</p>
+
+<pre><code class="language-python">if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+
+<p>This wraps up our code. You can now run this python script and see it identify the faces as male or female on live camera input.</p>
+
+<h1 id="next-steps">Next Steps</h1>
+
+<p>To identify faces, we used a basic OpenCV model which can only detect front view of faces. Since before classifying faces as male or female we need to detect faces first, using a better and more robust face detection method will significantly improve the performance of this application. We can also use a NN trained to detect faces instead of OpenCV model. Also, instead of using 2 different models to detect faces and then classify them, we can train a single model which directly detect male faces and female faces. <a href="https://towardsdatascience.com/yolo-you-only-look-once-real-time-object-detection-explained-492dc9230006">YOLO NN</a> is state of the art when it comes to detection. Feel free to experiment with it.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/tensorflow/">tensorflow</a>
+          
+          <a href="/tags/tensorflow-serving/">tensorflow-serving</a>
+          
+          <a href="/tags/classifier/">classifier</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/computer-vision/object-detection-approaches/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Object Detection Approaches</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="/post/computer-vision/gender-classification/">
+            <span class="next-text nav-default">Gender Classification</span>
+            <span class="prev-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+    
+
+  
+
+  
+
+  
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:jagpreet@cylopsis.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.linkedin.com/in/jagpreet-singh-chawla-427121104/" rel="me" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/jagpreetschawla" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="http://cylopsis.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jagpreet Singh Chawla</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+
+
+
+
+</body>
+</html>

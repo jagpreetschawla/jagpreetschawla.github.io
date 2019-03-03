@@ -10,14 +10,28 @@
   </url>
   
   <url>
-    <loc>http://cylopsis.com/post/neural-network/live-gender-classification/</loc>
+    <loc>http://cylopsis.com/post/computer-vision/face-attribute-detection/</loc>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/post/computer-vision/object-detection-approaches/</loc>
+    <lastmod>2018-12-17T12:19:04-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/post/computer-vision/live-gender-classification/</loc>
     <lastmod>2018-09-03T15:45:28+05:30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
   
   <url>
-    <loc>http://cylopsis.com/post/neural-network/gender-classification/</loc>
+    <loc>http://cylopsis.com/post/computer-vision/gender-classification/</loc>
     <lastmod>2018-04-22T02:50:18+05:30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
@@ -37,6 +51,27 @@
   </url>
   
   <url>
+    <loc>http://cylopsis.com/tags/computer-vision/</loc>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/categories/computer-vision/</loc>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://cylopsis.com/tags/convolution-nn/</loc>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>http://cylopsis.com/</loc>
     <lastmod>2018-04-05T23:27:29+05:30</lastmod>
     <changefreq>weekly</changefreq>
@@ -51,15 +86,15 @@
   </url>
   
   <url>
-    <loc>http://cylopsis.com/categories/neural-network/</loc>
-    <lastmod>2018-09-03T15:45:28+05:30</lastmod>
+    <loc>http://cylopsis.com/tags/object-detection/</loc>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>http://cylopsis.com/post/</loc>
-    <lastmod>2018-09-03T15:45:28+05:30</lastmod>
+    <lastmod>2019-01-25T12:52:08-05:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0</priority>
   </url>

@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Gender Classification - Cylopsis- an elucidation of ML</title>
+  <link rel="alternate" hreflang="en" href="http://cylopsis.com/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<meta name="author" content="Jagpreet Singh Chawla" />
+  <meta name="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here." />
+
+  <meta name="keywords" content="ML, Neural Networks, Blog, tensor flow" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+
+
+<link rel="canonical" href="http://cylopsis.com/post/computer-vision/gender-classification/" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="Gender Classification" />
+<meta property="og:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://cylopsis.com/post/computer-vision/gender-classification/" />
+<meta property="article:published_time" content="2018-04-22T02:50:18&#43;05:30"/>
+<meta property="article:modified_time" content="2018-04-22T02:50:18&#43;05:30"/>
+
+<meta itemprop="name" content="Gender Classification">
+<meta itemprop="description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here.">
+
+
+<meta itemprop="datePublished" content="2018-04-22T02:50:18&#43;05:30" />
+<meta itemprop="dateModified" content="2018-04-22T02:50:18&#43;05:30" />
+<meta itemprop="wordCount" content="2588">
+
+
+
+<meta itemprop="keywords" content="tensorflow,feed-forward-nn,classifier," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Gender Classification"/>
+<meta name="twitter:description" content="TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Cylopsis</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">Cylopsis</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        
+        <a class="menu-item-link" href="/">Home</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/post/">Archives</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/tags/">Tags</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/categories/">Categories</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/about/">About</a>
+        
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Gender Classification</h1>
+      
+      <div class="post-meta">
+        <span class="post-time"> 2018-04-22 </span>
+        <div class="post-category">
+            
+              <a href="/categories/computer-vision/"> computer-vision </a>
+            
+          </div>
+        <span class="more-meta"> 2588 words </span>
+        <span class="more-meta"> 13 min read </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#outline">Outline</a></li>
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#training-and-evaluating-the-neural-network-nn">Training and Evaluating the Neural Network (NN)</a>
+<ul>
+<li><a href="#importing-requirements">Importing requirements</a></li>
+<li><a href="#reading-images-and-splitting-the-dataset">Reading images and splitting the dataset</a></li>
+<li><a href="#defining-our-nn">Defining our NN</a>
+<ul>
+<li><a href="#layers-of-neural-network">Layers of neural network:</a></li>
+<li><a href="#pipeline-specifications">Pipeline specifications:</a></li>
+</ul></li>
+<li><a href="#creating-an-estimator">Creating an Estimator</a></li>
+<li><a href="#training-the-estimator">Training the Estimator</a></li>
+<li><a href="#evaluating-our-estimator">Evaluating our Estimator</a></li>
+<li><a href="#predicting-output">Predicting Output</a></li>
+</ul></li>
+<li><a href="#next-steps">Next Steps</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it <a href="/post/computer-vision/live-gender-classification/">here</a>.</p>
+
+<figure class="center">
+    <img src="/img/gender_classifier.png"/> 
+</figure>
+
+
+<h1 id="outline">Outline</h1>
+
+<p>We will look at how to build a classic feed-forward network using TensorFlow&rsquo;s estimator API and train it to classify faces as male or female. For sake of clarity and keeping it concise, I will not go into basics of python programming or Neural Networks. To easily follow the content, you should:</p>
+
+<ul>
+<li>be familiar with programming, and know at least basics of python</li>
+<li>know what neural networks are, and what backpropagation is</li>
+<li>know what Gradient Decent or optimizer is</li>
+</ul>
+
+<p>I will go through some basics of the setup for anyone who is getting started and wants to follow my code.</p>
+
+<h1 id="getting-started">Getting Started</h1>
+
+<p>For this project, I used a python virtual environment (python 2.7) with tensorflow, numpy, and scikit-image ( you can also use any other library to read and show the image like scipy, PIL or OpenCV etc. ). It&rsquo;s a good idea to use virtualenv, and have a separate python setup for each project to avoid conflicting dependencies and any issues due to system-wide installed packages. You can easily install virtualenv using pip (python&rsquo;s package manager).</p>
+
+<pre><code>$ pip install virtualenv
+</code></pre>
+
+<p>We can create a new virtual python environment using this command:</p>
+
+<pre><code>$ virtualenv  ~/mf_classifier/venv
+</code></pre>
+
+<p>You can use any other directory name and path instead of <code>~/mf_classifier/venv</code>. If you choose to use some other directory, please change the path in all commands in this article accordingly.</p>
+
+<p>Now we can &ldquo;activate&rdquo; the newly created virtualenv. Once you activate the virtualenv in a terminal, the current terminal session or window will start referring to python inside <code>~/mf_classifier/venv</code> instead of python installed in the system. This effectively creates a separate python environment which will be different from python installed on the system. To activate the virtualenv, we can run:</p>
+
+<pre><code>$ source ~/mf_classifier/venv/bin/activate
+</code></pre>
+
+<p>Notice that after running the command, we can see <code>(venv)</code> (or any other directory name you chose earlier) in-front of prompt in the terminal, indicating that the virtualenv is currently active. With virtualenv active, we will install all our requirements:</p>
+
+<pre><code>(venv)$ pip install numpy==1.14.2 tensorflow==1.6.0 scikit-image==0.13.1
+</code></pre>
+
+<p>Feel free to use the newer versions, but you might need to make few changes to code specified in this article if the newer versions are not backward compatible.</p>
+
+<p>I recommend using jupyter (ipython) notebook to run and experiment with our neural network code. This makes it really easy to experiment with parameters and re-run without running the whole code. Also, the training code in my git repository is an ipython notebook, and you will need ipython/jupyter if you want to open it. To install the jupyter run:</p>
+
+<pre><code>(venv)$ pip install jupyter
+</code></pre>
+
+<p>You can run the notebook using command <code>jupyter notebook</code>.</p>
+
+<p>This wraps up our setup. Let&rsquo;s start working on our project :)</p>
+
+<h1 id="training-and-evaluating-the-neural-network-nn">Training and Evaluating the Neural Network (NN)</h1>
+
+<p>We are going to train a simple feed-forward Neural Network to classify faces as male face or female face. It is a <a href="https://en.wikipedia.org/wiki/Supervised_learning">supervised learning</a> algorithm, so the first thing you need is labeled data. You can get the data from my <a href="https://github.com/jagpreetschawla/live_gender_classifier/tree/master/data">GitHub repository</a> for this project. It is organized in 2 folders, one for male and one for female, so it is a labeled dataset.</p>
+
+<p>We will go through the code in parts, but you can see the complete notebook <a href="https://github.com/jagpreetschawla/live_gender_classifier/blob/master/nn_classifier.ipynb">here</a>.</p>
+
+<h2 id="importing-requirements">Importing requirements</h2>
+
+<p>Lets import requirements for our NN and data.</p>
+
+<pre><code class="language-python">import os
+import random
+import tensorflow as tf
+import numpy as np
+from skimage.io import imread, imshow
+</code></pre>
+
+<p>We will be using <code>os</code> to list all files in our dataset directory, <code>random</code> to shuffle the dataset, <code>skimage</code> (scikit-image) for reading and displaying image, and <code>numpy</code> and <code>tensorflow</code> for manipulating data, creating NN, and training.</p>
+
+<h2 id="reading-images-and-splitting-the-dataset">Reading images and splitting the dataset</h2>
+
+<p>Now we need to read all images and create <code>test</code> and <code>train</code> inputs and labels</p>
+
+<pre><code class="language-python">random.seed(1234)
+
+X, Y = [], []
+dir_ = {'data/male/': 1, 'data/female/': 0}
+for d, y in dir_.items():
+    for i in os.listdir(d):
+        f = os.path.join(d, i)
+        if os.path.isfile(f) and i.endswith(&quot;.png&quot;):
+            img = imread(f)/255.0
+            X.append(img)
+            Y.append(y)
+
+tmp = list(zip(X, Y))
+random.shuffle(tmp)
+X, Y = zip(*tmp)
+test_size = int(0.05 * len(X))
+X_test, Y_test = np.array(X[-test_size:], dtype=np.float32), np.array(Y[-test_size:])
+X_train, Y_train = np.array(X[0:-test_size], dtype=np.float32), np.array(Y[0:-test_size])
+</code></pre>
+
+<p>We are first setting a seed for the random module by calling <code>random.seed(1234)</code>. A seed is a number which defines how random number is generated. Passing same seed will always produce same order of random numbers. For example, after setting seed to 1234, the first call to <code>random.random()</code> always returns 0.4407325991753527, and the second call always returns 0.9109759624491242. Even if we are using random numbers, constant seed ensures that the output and code behavior will be exactly same across multiple runs on any system. Here we want the <code>random.shuffle(tmp)</code> to shuffle the list in exactly the same way no matter how many time we run it, so we set a constant seed.</p>
+
+<p>Next, we iterate each directory ( both male and female ) and read all the images ( files ending in <code>.png</code> ) and store it in <code>X</code> and corresponding label in <code>Y</code> ( 1 for male and 0 for female ).</p>
+
+<blockquote>
+<p>Note: Label needs to be a number. If you want to use strings you will need to convert them into numbers before using them inside your model ( you can use feature columns for conversion )</p>
+</blockquote>
+
+<p>Next, we shuffle them. To shuffle, we first combine the input and labels using <code>list(zip(X, Y))</code>. This gives us a list. We shuffle this list using <code>random.shuffle</code> and then split it back into inputs <code>X</code> and labels <code>Y</code> using <code>zip(*tmp)</code>. We then split the data into test set and train set, converting it into numpy arrays ( test size is only 5% since we have very less data for training, ideally we should have more than 20% )</p>
+
+<h2 id="defining-our-nn">Defining our NN</h2>
+
+<p>There are several ways we can create NN or other ML models in TensorFlow. You can use low-level APIs and manually construct an NN or use high-level APIs like Estimators and Karas. We will be using estimators for this project. Estimator is a general API to create any model which &ldquo;estimates&rdquo; a function and try to predict a value. For the purpose of learning and understanding, we will be building a custom estimator and will define our NN, layer by layer, by leveraging TensorFlow&rsquo;s layer API. Once we know how to make a custom estimator, we can create any type of Neural Network. But for quick implementation of simple or common tasks, TensorFlow provides us some pre-made Estimators. The NN in this article can also be made using pre-made <a href="https://www.tensorflow.org/api_docs/python/tf/estimator/DNNClassifier">DNNClassifier</a> estimator. You can visit the official TensorFlow website <a href="https://www.tensorflow.org/get_started/premade_estimators">here</a> to learn more about estimators and how to use pre-made estimators. You can also visit <a href="https://www.tensorflow.org/get_started/custom_estimators">here</a> to view an official tutorial on using custom estimators.</p>
+
+<p>To define custom estimator, we need to define a function that explains our NN or ML model, and defines how to train and evaluate our model or predict the values. We define our function <code>classifier_model_fn</code> as:</p>
+
+<pre><code class="language-python">def classifier_model_fn(features, labels, mode):
+    # Input Layer
+    input_layer = tf.reshape(features[&quot;x&quot;], [-1, 25*25])
+    layer_1 = tf.layers.dense(inputs=input_layer, units=200, activation=tf.nn.relu)
+    layer_output = tf.layers.dense(inputs=layer_1, units=2)
+    predictions = {
+        &quot;prob&quot;: tf.nn.softmax(layer_output),
+        &quot;output&quot;: tf.argmax(input=layer_output, axis=1)
+    }
+    if mode == tf.estimator.ModeKeys.PREDICT:
+        return tf.estimator.EstimatorSpec(mode=mode, predictions=predictions,
+                                          export_outputs={
+                                              &quot;prediction&quot;: tf.estimator.export.ClassificationOutput(
+                                                  scores=predictions[&quot;prob&quot;]
+                                              )
+                                          })
+
+    # Calculate Loss (for both TRAIN and EVAL modes)
+    # out_clipped = tf.clip_by_value(layer_output,1e-10,1e10)
+    loss = tf.losses.sparse_softmax_cross_entropy(labels=labels, logits=layer_output)
+
+    # Configure the Training Op (for TRAIN mode)
+    if mode == tf.estimator.ModeKeys.TRAIN:
+        optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
+        train_op = optimizer.minimize(
+            loss=loss,
+            global_step=tf.train.get_global_step())
+        return tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)
+
+    # Add evaluation metrics (for EVAL mode)
+    eval_metric_ops = {
+        &quot;accuracy&quot;: tf.metrics.accuracy(
+        labels=labels, predictions=predictions[&quot;output&quot;])}
+    return tf.estimator.EstimatorSpec(
+        mode=mode, loss=loss, eval_metric_ops=eval_metric_ops)
+</code></pre>
+
+<p>Let&rsquo;s break down the code.</p>
+
+<h3 id="layers-of-neural-network">Layers of neural network:</h3>
+
+<p>The code is pretty straightforward. Our input is a 25X25 image, so we first reshaped it using <code>tf.reshape(features[&quot;x&quot;], [-1, 25*25])</code>. Here -1 means the dimension is calculated automatically. If we send 3 images as input, the input becomes [3, 25*25], if we send a single image, it becomes [1, 25*25].</p>
+
+<p>Next, we defined our first layer using <code>tf.layers.dense(inputs=input_layer, units=200, activation=tf.nn.relu)</code>. We defined it as a dense layer, which means its a fully connected layer, that is every neuron in this layer is connected to every input node. We passed our reshaped inputs, set number of neuron units as 200, and activation as <code>relu</code>.  Activation is the function used to calculate output from weighted sum of inputs. Relu can be defined as \(f(x) = max(0, x)\). Instead of relu, you can also try \(tanh(x)\) or classic sigmoid \({1}/({1+e^{-x}})\).</p>
+
+<p>Next we define our output layer <code>tf.layers.dense(inputs=layer_1, units=2)</code>. We have 2 neurons, one tries to identify males and other females. Notice how we didn&rsquo;t specify any activation in this layer. This is because we need only weighted sum from the last layer as we are applying softmax activation later ( in <code>predictions</code> dictionary ).</p>
+
+<p>Next we define the outputs we need in <code>predictions</code> dictionary. We will output the predicted class by checking which node/neuron gives max value <code>tf.argmax(input=layer_output, axis=1)</code> and probabilities by applying softmax activation <code>tf.nn.softmax(layer_output)</code> ( <a href="https://en.wikipedia.org/wiki/Softmax_function">softmax</a> converts the inputs in range (0,1) such that the sum of all nodes = 1, so it can be treated as probabilities )</p>
+
+<h3 id="pipeline-specifications">Pipeline specifications:</h3>
+
+<p>Next, we need to define the specifications of our model, that is, how our model works in different modes. There are 3 modes an Estimator can be run in:</p>
+
+<ul>
+<li>Train</li>
+<li>Eval</li>
+<li>Predict</li>
+</ul>
+
+<p>The mode is automatically passed by TensorFlow as a parameter to our model function. We will check what mode is estimator being run in, and will accordingly return an <code>EstimatorSpec</code> instance. This instance will be used by TensorFlow to define and run our model. <code>EstimatorSpec</code> class provides us a way to define all the specifications of the model for a specific mode.</p>
+
+<p>If the estimator is running in predict mode <code>if mode == tf.estimator.ModeKeys.PREDICT</code>, we tell TensorFlow what we want to predict by specifying <code>predictions</code> parameter in <code>tf.estimator.EstimatorSpec(mode=mode, predictions=predictions, export_outputs={&quot;prediction&quot;: tf.estimator.export.ClassificationOutput(scores=predictions[&quot;prob&quot;])})</code> , and then we return this instance. The <code>export_outputs</code> are used to tell TensorFlow what outputs we need from our final model once we export and run it using tensorflow_serving. We will look more into this later in another article.</p>
+
+<p>If estimator is running in train mode <code>if mode == tf.estimator.ModeKeys.TRAIN:</code>, we tell TensorFlow how to calculate the loss by specifying <code>loss</code> parameter, and how to optimize or improve our model by specifying <code>train_op</code> parameter: <code>tf.estimator.EstimatorSpec(mode=mode, loss=loss, train_op=train_op)</code>. Here our loss is <code>tf.losses.sparse_softmax_cross_entropy</code>, which is a standard way to compute loss if the output layer activation is <code>softmax</code>.</p>
+
+<blockquote>
+<p>Note: In <code>tf.losses.sparse_softmax_cross_entropy</code> we pass our predictions as <code>logits</code> instead of actual predictions (probabilities). <code>logits</code> is the output of the last layer before applying softmax.</p>
+</blockquote>
+
+<p><code>train_op</code> is defined as <code>optimizer.minimize(loss=loss, global_step=tf.train.get_global_step())</code>, that is, we are telling TensorFlow to minimize the loss by using this optimizer. The optimizer we are using (<code>tf.train.AdamOptimizer</code>) is a variant of <a href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent">stochastic gradient descent</a>, which is like a gradient descent with adaptive learning rate for each parameter. You can also try out vanilla gradient descent <code>tf.train.GradientDescentOptimizer</code>.</p>
+
+<p>If estimator is not running in train mode or predict mode, that is, it is running in evaluation mode <code>tf.estimator.ModeKeys.EVAL</code>, we tell TensorFlow calculate to accuracy on our input <code>tf.estimator.EstimatorSpec(mode=mode, loss=loss, eval_metric_ops=eval_metric_ops)</code>, where <code>eval_metric_ops</code> are the values we want to calculate <code>eval_metric_ops = {&quot;accuracy&quot;: tf.metrics.accuracy(labels=labels, predictions=predictions[&quot;output&quot;])}</code>.</p>
+
+<p>Now we have our model and its specifications defined, so let&rsquo;s create a model using these specifications.</p>
+
+<h2 id="creating-an-estimator">Creating an Estimator</h2>
+
+<p>We can create an estimator defined using our model function <code>classifier_model_fn</code> by creating an instance of class <code>tf.estimator.Estimator</code>:</p>
+
+<pre><code class="language-python">mf_classifier = tf.estimator.Estimator(
+    model_fn=classifier_model_fn, model_dir=&quot;/tmp/mf_classifier&quot;)
+</code></pre>
+
+<p>We pass our model function as a parameter <code>model_fn</code>. Notice that we have also defined a model directory <code>model_dir</code>. This should be an empty directory (TensorFlow creates it, if it doesn&rsquo;t exist). TensorFlow will be saving the progress of our estimator and checkpoints in this directory. This way we have the latest parameters of our model backed up. This makes it easy to continue the training from the last checkpoint or evaluate or use our model without the need to retrain it every time. This way we can even split our code in different python scripts or notebooks, as long as we are using same model function and model directory. One of the main use of model directory is to track the progress and analyze our model using <a href="https://www.tensorflow.org/programmers_guide/summaries_and_tensorboard">tensorboard</a> (Note: with estimators, you don&rsquo;t need to merge summaries or create FileWriters for tensorboard, since estimators are doing it internally).</p>
+
+<blockquote>
+<p>Note: Since our model and it&rsquo;s parameters are saved in the model directory, you will need to <strong>delete or clear this directory</strong> every time you change the model or want to run the training from the start</p>
+</blockquote>
+
+<p>Now we have our model, so lets train and evaluate our model.</p>
+
+<h2 id="training-the-estimator">Training the Estimator</h2>
+
+<p>Training the model is straightforward. First, we define our inputs <code>x</code>, expected outputs <code>y</code> and other training parameters such as the number of iterations/epochs and batch size:</p>
+
+<pre><code class="language-python">train_input_fn = tf.estimator.inputs.numpy_input_fn(
+    x={&quot;x&quot;: X_train},
+    y=Y_train,
+    batch_size=100,
+    num_epochs=None,
+    shuffle=True)
+</code></pre>
+
+<p>Here we are using <code>tf.estimator.inputs.numpy_input_fn</code> to directly create inputs from numpy arrays. We are using our train dataset as input for training.</p>
+
+<p>Next, we train the model from the inputs:</p>
+
+<pre><code class="language-python">mf_classifier.train(
+    input_fn=train_input_fn,
+    steps=8000)
+</code></pre>
+
+<p>As your model is being trained, you will see logs such as <code>INFO:tensorflow:loss = 0.5272835, step = 101 (0.197 sec)</code> to indicate current progress. Once model is trained, we can evaluate its performance using our test dataset.</p>
+
+<h2 id="evaluating-our-estimator">Evaluating our Estimator</h2>
+
+<p>Evaluation is exactly same as training. The only difference is that we use test dataset instead of training dataset, and call <code>mf_classifier.evaluate</code> instead of <code>mf_classifier.train</code> and print the result:</p>
+
+<pre><code class="language-python">eval_input_fn = tf.estimator.inputs.numpy_input_fn(
+    x={&quot;x&quot;: X_test},
+    y=Y_test,
+    shuffle=False)
+eval_results = mf_classifier.evaluate(input_fn=eval_input_fn)
+print(eval_results)
+</code></pre>
+
+<p>Since we are evaluating and not training, we don&rsquo;t need to pass training parameters such as <code>num_epochs</code> and <code>batch_size</code>.
+Once you run it, you will see output like this: <code>{'loss': 0.30619115, 'global_step': 8000, 'accuracy': 0.8969697}</code></p>
+
+<p>We got an accuracy of 89.69%. Let&rsquo;s see what it predicts for a random test image.</p>
+
+<h2 id="predicting-output">Predicting Output</h2>
+
+<p>Lets see what image we have at index 104 in our training data, and which gender does our model predicts:</p>
+
+<pre><code class="language-python">check_index=110
+predict_input_fn = tf.estimator.inputs.numpy_input_fn(
+    x={&quot;x&quot;: X_test[check_index]}, shuffle=False)
+predict_results = mf_classifier.predict(input_fn=predict_input_fn, predict_keys=[&quot;output&quot;])
+imshow(X_test[check_index])
+print([&quot;male&quot; if i[&quot;output&quot;] else &quot;female&quot; for i in predict_results])
+</code></pre>
+
+<p>This will show you an image and print the prediction for that image as shown below:</p>
+
+<figure class="center">
+    <img src="/img/gender_prediction.png" width="200px"/> <figcaption>
+            <h4>prediction on a test image</h4>
+        </figcaption>
+</figure>
+
+
+<p>Feel free to check random images.</p>
+
+<h1 id="next-steps">Next Steps</h1>
+
+<p>What we created is a very basic model. Although it gives us decent accuracy, there is a lot of scope for improvements. You can try out following things and see if it gives you better results:</p>
+
+<ul>
+<li>Try changing NN structure by adding/removing neurons or adding layers ( for more layers you might need more data )</li>
+<li>Try a different NN architecture such as <a href="https://en.wikipedia.org/wiki/Convolutional_neural_network">Convolution NN</a></li>
+<li>Try using a bigger dataset</li>
+<li>Try data augmentation techniques to increase size of dataset such as flipping some images, changing color, resizing etc.</li>
+<li>Try using <a href="https://towardsdatascience.com/batch-normalization-in-neural-networks-1ac91516821c">batch normalization</a>, <a href="https://medium.com/@amarbudhiraja/https-medium-com-amarbudhiraja-learning-less-to-learn-better-dropout-in-deep-machine-learning-74334da4bfc5">dropouts</a> and other regularization techniques</li>
+<li>Try <a href="https://www.coursera.org/learn/convolutional-neural-networks/lecture/4THzO/transfer-learning">transfer learning</a> on already trained NN</li>
+</ul>
+
+<p>I also used this model to make a realtime application which detect faces and classify them as male or female on a live camera feed. You can read more about it <a href="/post/computer-vision/live-gender-classification/">here</a>.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/tensorflow/">tensorflow</a>
+          
+          <a href="/tags/feed-forward-nn/">feed-forward-nn</a>
+          
+          <a href="/tags/classifier/">classifier</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/computer-vision/live-gender-classification/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Live Gender Classification</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+      </nav>
+    </footer>
+    
+
+  
+
+  
+
+  
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:jagpreet@cylopsis.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.linkedin.com/in/jagpreet-singh-chawla-427121104/" rel="me" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/jagpreetschawla" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="http://cylopsis.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jagpreet Singh Chawla</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+
+
+
+
+</body>
+</html>

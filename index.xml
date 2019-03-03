@@ -24,11 +24,33 @@
     </item>
     
     <item>
+      <title>Realtime Face Attribute Detection</title>
+      <link>http://cylopsis.com/post/computer-vision/face-attribute-detection/</link>
+      <pubDate>Fri, 25 Jan 2019 12:52:08 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/post/computer-vision/face-attribute-detection/</guid>
+      
+        <description>In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go.</description>
+      
+    </item>
+    
+    <item>
+      <title>Object Detection Approaches</title>
+      <link>http://cylopsis.com/post/computer-vision/object-detection-approaches/</link>
+      <pubDate>Mon, 17 Dec 2018 12:19:04 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/post/computer-vision/object-detection-approaches/</guid>
+      
+        <description>In my previous article, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach.</description>
+      
+    </item>
+    
+    <item>
       <title>Live Gender Classification</title>
-      <link>http://cylopsis.com/post/neural-network/live-gender-classification/</link>
+      <link>http://cylopsis.com/post/computer-vision/live-gender-classification/</link>
       <pubDate>Mon, 03 Sep 2018 15:45:28 +0530</pubDate>
       
-      <guid>http://cylopsis.com/post/neural-network/live-gender-classification/</guid>
+      <guid>http://cylopsis.com/post/computer-vision/live-gender-classification/</guid>
       
         <description>In my article Gender Classification, I explained how I trained a basic a NN to classify faces based on gender using TensorFlow. In this article, we will look at how to take the trained model, and convert it into a program which classifies all faces on a live camera feed. To introduce tensorflow-serving, we will set up a tensorflow-serving server to serve our NN model. Our program will then use this server for classification.</description>
       
@@ -36,10 +58,10 @@
     
     <item>
       <title>Gender Classification</title>
-      <link>http://cylopsis.com/post/neural-network/gender-classification/</link>
+      <link>http://cylopsis.com/post/computer-vision/gender-classification/</link>
       <pubDate>Sun, 22 Apr 2018 02:50:18 +0530</pubDate>
       
-      <guid>http://cylopsis.com/post/neural-network/gender-classification/</guid>
+      <guid>http://cylopsis.com/post/computer-vision/gender-classification/</guid>
       
         <description>TensorFlow provides an amazing framework to quickly set up, train and deploy a Machine Learning model. In this article, we will look at all its awesomeness as I go through one of my basic projects which uses TensorFlow to classify a face as a male or female. Later, I used the trained model to create a deployable system and used it to classify faces on a live camera feed. You can read more about it here.</description>
       

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>Object Detection Approaches - Cylopsis- an elucidation of ML</title>
+  <link rel="alternate" hreflang="en" href="http://cylopsis.com/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<meta name="author" content="Jagpreet Singh Chawla" />
+  <meta name="description" content="In my previous article, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach." />
+
+  <meta name="keywords" content="ML, Neural Networks, Blog, tensor flow" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+
+
+<link rel="canonical" href="http://cylopsis.com/post/computer-vision/object-detection-approaches/" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="Object Detection Approaches" />
+<meta property="og:description" content="In my previous article, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://cylopsis.com/post/computer-vision/object-detection-approaches/" />
+<meta property="article:published_time" content="2018-12-17T12:19:04-05:00"/>
+<meta property="article:modified_time" content="2018-12-17T12:19:04-05:00"/>
+
+<meta itemprop="name" content="Object Detection Approaches">
+<meta itemprop="description" content="In my previous article, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach.">
+
+
+<meta itemprop="datePublished" content="2018-12-17T12:19:04-05:00" />
+<meta itemprop="dateModified" content="2018-12-17T12:19:04-05:00" />
+<meta itemprop="wordCount" content="1256">
+
+
+
+<meta itemprop="keywords" content="computer-vision,object-detection," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Object Detection Approaches"/>
+<meta name="twitter:description" content="In my previous article, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Cylopsis</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">Cylopsis</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        
+        <a class="menu-item-link" href="/">Home</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/post/">Archives</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/tags/">Tags</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/categories/">Categories</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/about/">About</a>
+        
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">Object Detection Approaches</h1>
+      
+      <div class="post-meta">
+        <span class="post-time"> 2018-12-17 </span>
+        <div class="post-category">
+            
+              <a href="/categories/computer-vision/"> computer-vision </a>
+            
+          </div>
+        <span class="more-meta"> 1256 words </span>
+        <span class="more-meta"> 6 min read </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#classifier-based-detection-approach">Classifier based detection approach</a>
+<ul>
+<li><a href="#sliding-window-classifier">Sliding window classifier</a></li>
+<li><a href="#problems-with-sliding-window">Problems with sliding window</a></li>
+</ul></li>
+<li><a href="#classifier-with-region-selection">Classifier with region selection</a>
+<ul>
+<li><a href="#problem-with-region-selection">Problem with region selection</a></li>
+</ul></li>
+<li><a href="#the-solution">The Solution</a>
+<ul>
+<li><a href="#yolo">YOLO</a></li>
+</ul></li>
+<li><a href="#my-work-using-this-approach">My work using this approach</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>In my previous <a href="/post/computer-vision/live-gender-classification/">article</a>, I created a live face detection with gender recognition using 2 different models. We used an OpenCV provided cascade classifier to detect faces, and used our trained Neural Network to classify detected faces. But cascade classifier is very weak and detects faces only in front view. We can combine more models for side views, but still, it will not be as good as a NN based approach. Now a simple way to fix this would be to use a more powerful model to detect faces and use the same gender classifier to classify the detected faces, but this type of approach doesn’t always work especially in complex scenarios like object detection. In this article, we will look at the possible solution and how we can create a single NN structure for such scenarios.</p>
+
+<h1 id="classifier-based-detection-approach">Classifier based detection approach</h1>
+
+<p>We can very well solve our problem using 2 Neural Network models, one trained to detect faces and others to classify them. But first, let&rsquo;s think about how our first model will work. How will it detect faces?</p>
+
+<h2 id="sliding-window-classifier">Sliding window classifier</h2>
+
+<p>A simple and previously popular method is to actually train a model to classify image (small patch of the image to be exact) as face vs non-face. Let&rsquo;s assume we trained the model to classify images of size <code>SxS</code>. To convert this classifier into a detector, we use this classifier on various parts of the image. We start looking from the top left corner and scan every <code>SxS</code> part of the image to check whether it contains a face. Now we know that wherever our model classifies the image as a face, there is a face (with some probability). But what if the face in the image is bigger than <code>SxS</code> (our classifier size). To detect them we resize the image to a smaller scale (after adding a bit of gaussian blur for some other reasons) and do the same process as above. We repeat this for different scales to detect faces of different sizes.</p>
+
+<blockquote>
+<p>Note: As the name suggests, OpenCV cascade classifier was infact a classifier approach which we used to detect faces</p>
+</blockquote>
+
+<h2 id="problems-with-sliding-window">Problems with sliding window</h2>
+
+<p>Since a face can be at any location, and the classifier has to be on the face to detect it, we have to run classifier for every possible location. So if we have a <code>320x320</code> image and our classifier works on <code>20x20</code> image, we have to run the classifier (320-20)x(320-20) times for each scale. If we try 3 different scales, we are running our classifier for <code>270000</code> times!!! Even then we might miss some faces as we are checking on only 3 scales. You can clearly see why this doesn’t work for real-time systems. We might get it to work for our specific use case if we use very simple models as the classifier, but it clearly doesn’t work with complex models for complex tasks like object detection.</p>
+
+<h1 id="classifier-with-region-selection">Classifier with region selection</h1>
+
+<p>A solution to the above problem is to use another model or a smart algorithm to find the areas of interest and run our classifier to only these areas. So instead of running our classifier on every possible location, we use a model or some heuristics to detect the possible locations which might have an object (or whatever we are trying to detect). This significantly reduces the number of times we have to run our classifier, but this introduces another model in the pipeline. Now we not only have to have a good classifier but also a good and finetuned method to find regions to run our classifier on.</p>
+
+<p>One of the popular algorithms which use a similar method for object detection is called <a href="https://arxiv.org/abs/1311.2524">R-CNN</a>. R-CNN uses a selective search to get “region proposals”. It then uses a Convolutional Neural Network to classify the objects in proposed regions. This is followed by some post-processing models to finetune the predictions. This is just a rough overview of the approach used, for details feel free to read the <a href="https://arxiv.org/abs/1311.2524">paper</a>.</p>
+
+<h2 id="problem-with-region-selection">Problem with region selection</h2>
+
+<p>As mentioned above, we are introducing another model or algorithm that we need to train or finetune. No matter how good our classifier is, it won’t detect anything unless our region selection method selects the appropriate regions to check. Also, since we need to run multiple models for each image, its difficult to achieve real-time performance unless the models are very fast. Although this method is faster than previous brute force approach, it is still not enough for real-time applications when using complex and time-consuming models.</p>
+
+<h1 id="the-solution">The Solution</h1>
+
+<p>The solution to the above problems seems very obvious, just have one model do everything. That way we can optimize the model directly to detect and classify objects without optimizing and integrating each part separately. And this also makes it faster, since instead of different models, we need to run only one model which will save time and hence will be faster (unless that single model is computationally more expensive than multiple models combined). But how exactly can we do that?</p>
+
+<h2 id="yolo">YOLO</h2>
+
+<p>If the answer was that obvious we wouldn&rsquo;t be struggling here. This is where <a href="https://arxiv.org/abs/1506.02640">YOLO</a> comes in. YOLO does exactly that, it optimizes a single NN model for the final output, that is, location as well as the class of objects. It takes at the problem with a different perspective, and once you understand their approach it will seem so obvious. The model is very simple. There are 3 main points in the model:</p>
+
+<ul>
+<li>Instead of classification (like we were doing with moving window and region selection), look at the problem as a regression problem: given an image, we want to regress the bounding box (center and size) for objects. It is that simple!</li>
+<li>To simplify the problem and have a fixed output, divide the image into a grid. Each grid cell will predict <code>B</code> bounding boxes with a confidence <code>c</code>. Each cell is responsible to only regress bounding boxes for objects which have its center in this particular grid cell. We will only consider bounding boxes which have high confidence. So grid cells which don’t have any object centers are free to give any <code>B</code> bounding boxes as long as the confidence for each bounding box is close to 0.</li>
+<li>Along with bounding box regression, each will have a <code>C</code> classification outputs for each cell which will give conditional probabilities for each class. That is, given there is an object what is the probability that it is of class x. You can also consider these as regression where you are trying to regress probabilities, it just depends on the way you look at it.</li>
+</ul>
+
+<p>That&rsquo;s it! it is that simple. Of course, there are more details to the model, but these are the key ideas that YOLO introduces. Feel free to read the paper <a href="https://arxiv.org/abs/1506.02640">here</a>. The paper is simple to understand, but if you prefer a less formal explanation just google it. YOLO is a breakthrough and it is all over the internet. I think the article <a href="https://hackernoon.com/understanding-yolo-f5a74bbc7967">here</a> covers most of the details. There are a lot of further improvements done to YOLO and if you want to into details of each YOLO variation, have a look at the article <a href="https://medium.com/@jonathan_hui/real-time-object-detection-with-yolo-yolov2-28b1b93e2088">here</a>.</p>
+
+<h1 id="my-work-using-this-approach">My work using this approach</h1>
+
+<p>I always wanted to try this so I worked on a simple project which replaces OpenCV Model and NN model in my <a href="/post/computer-vision/live-gender-classification/">live gender recognition</a> with a single regression model, which is one of the key concepts of YOLO. You can read more about it <a href="/post/computer-vision/face-attribute-detection/">here</a>.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/computer-vision/">computer-vision</a>
+          
+          <a href="/tags/object-detection/">object-detection</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+          <a class="prev" href="/post/computer-vision/face-attribute-detection/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">Realtime Face Attribute Detection</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
+        
+          <a class="next" href="/post/computer-vision/live-gender-classification/">
+            <span class="next-text nav-default">Live Gender Classification</span>
+            <span class="prev-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+    
+
+  
+
+  
+
+  
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:jagpreet@cylopsis.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.linkedin.com/in/jagpreet-singh-chawla-427121104/" rel="me" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/jagpreetschawla" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="http://cylopsis.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jagpreet Singh Chawla</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+
+
+
+
+</body>
+</html>
