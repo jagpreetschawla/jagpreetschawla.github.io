@@ -24,6 +24,17 @@
     </item>
     
     <item>
+      <title>T-Rex Game</title>
+      <link>http://cylopsis.com/post/reinforcement-learning/t-rex-game/</link>
+      <pubDate>Sun, 03 Mar 2019 23:50:11 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/post/reinforcement-learning/t-rex-game/</guid>
+      
+        <description>This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found here.</description>
+      
+    </item>
+    
+    <item>
       <title>Realtime Face Attribute Detection</title>
       <link>http://cylopsis.com/post/computer-vision/face-attribute-detection/</link>
       <pubDate>Fri, 25 Jan 2019 12:52:08 -0500</pubDate>

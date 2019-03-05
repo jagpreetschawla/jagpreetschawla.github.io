@@ -71,11 +71,11 @@
 
 <meta itemprop="datePublished" content="2019-01-25T12:52:08-05:00" />
 <meta itemprop="dateModified" content="2019-01-25T12:52:08-05:00" />
-<meta itemprop="wordCount" content="3426">
+<meta itemprop="wordCount" content="3434">
 
 
 
-<meta itemprop="keywords" content="object-detection,convolution-nn,computer-vision," />
+<meta itemprop="keywords" content="object-detection,convolution-nn,computer-vision,machine-learning," />
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Realtime Face Attribute Detection"/>
 <meta name="twitter:description" content="In my article about object detection approaches, I mentioned a few ways to handle object detection and introduced YOLO NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my live gender classifier to use only one NN to detect as well as classify faces in one single go."/>
@@ -168,7 +168,7 @@
               <a href="/categories/computer-vision/"> computer-vision </a>
             
           </div>
-        <span class="more-meta"> 3426 words </span>
+        <span class="more-meta"> 3434 words </span>
         <span class="more-meta"> 17 min read </span>
       </div>
     </header>
@@ -210,6 +210,14 @@
       
 
 <p>In my article about <a href="/post/computer-vision/object-detection-approaches/">object detection approaches</a>, I mentioned a few ways to handle object detection and introduced <a href="https://arxiv.org/abs/1506.02640">YOLO</a> NN model which uses a single Neural Network to simultaneously localize as well as classify the objects. It uses a regression approach to detect the object by dividing the image into a grid. To me, it seems really simple but innovative approach and I wanted to try it out myself. So I decided to rewrite my <a href="/post/computer-vision/live-gender-classification/">live gender classifier</a> to use only one NN to detect as well as classify faces in one single go. Although YOLO has more details than this, for now this is the only thing I decided to focus on. In this article, I will give an overview of my project and how I implemented it.</p>
+
+<figure class="center">
+    <img src="/img/face_attr_detection_test.png"
+         alt="Sample detection on test data made by NN"/> <figcaption>
+            <p><small>Sample detection on test data made by NN</small></p>
+        </figcaption>
+</figure>
+
 
 <h1 id="outline">Outline</h1>
 
@@ -395,11 +403,18 @@
           
           <a href="/tags/computer-vision/">computer-vision</a>
           
+          <a href="/tags/machine-learning/">machine-learning</a>
+          
         </div>
 
       
       <nav class="post-nav">
         
+          <a class="prev" href="/post/reinforcement-learning/t-rex-game/">
+            <i class="iconfont icon-left"></i>
+            <span class="prev-text nav-default">T-Rex Game</span>
+            <span class="prev-text nav-mobile">Prev</span>
+          </a>
         
           <a class="next" href="/post/computer-vision/object-detection-approaches/">
             <span class="next-text nav-default">Object Detection Approaches</span>

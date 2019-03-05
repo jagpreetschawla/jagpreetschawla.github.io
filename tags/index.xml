@@ -24,7 +24,7 @@
     <item>
       <title>Computer Vision</title>
       <link>http://cylopsis.com/tags/computer-vision/</link>
-      <pubDate>Fri, 25 Jan 2019 12:52:08 -0500</pubDate>
+      <pubDate>Sun, 03 Mar 2019 23:50:11 -0500</pubDate>
       
       <guid>http://cylopsis.com/tags/computer-vision/</guid>
       <description></description>
@@ -49,11 +49,29 @@
     </item>
     
     <item>
+      <title>Machine Learning</title>
+      <link>http://cylopsis.com/tags/machine-learning/</link>
+      <pubDate>Sun, 03 Mar 2019 23:50:11 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/tags/machine-learning/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Object Detection</title>
       <link>http://cylopsis.com/tags/object-detection/</link>
       <pubDate>Fri, 25 Jan 2019 12:52:08 -0500</pubDate>
       
       <guid>http://cylopsis.com/tags/object-detection/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Reinforcement Learning</title>
+      <link>http://cylopsis.com/tags/reinforcement-learning/</link>
+      <pubDate>Sun, 03 Mar 2019 23:50:11 -0500</pubDate>
+      
+      <guid>http://cylopsis.com/tags/reinforcement-learning/</guid>
       <description></description>
     </item>
     

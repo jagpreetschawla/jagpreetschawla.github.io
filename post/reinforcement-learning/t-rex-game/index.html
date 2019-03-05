@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <title>T-Rex Game - Cylopsis</title>
+  <link rel="alternate" hreflang="en" href="http://cylopsis.com/" />
+
+<meta name="renderer" content="webkit" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+<meta name="MobileOptimized" content="width"/>
+<meta name="HandheldFriendly" content="true"/>
+
+
+<meta name="applicable-device" content="pc,mobile">
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+<meta name="theme-color" content="#f8f5ec" />
+<meta name="msapplication-navbutton-color" content="#f8f5ec">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="#f8f5ec">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+
+<meta name="author" content="Jagpreet Singh Chawla" />
+  <meta name="description" content="This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found here." />
+
+  <meta name="keywords" content="Machine Learning, Neural Networks, Blog, tensor flow, projects, computer vision, reinforcement learning" />
+
+
+
+
+
+
+<meta name="generator" content="Hugo 0.54.0" />
+
+
+<link rel="canonical" href="http://cylopsis.com/post/reinforcement-learning/t-rex-game/" />
+
+
+
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="icon" href="/favicon.ico" />
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+
+
+
+<link href="/dist/jane.min.css?v=2.7.0" rel="stylesheet">
+<link href="/lib/fancybox/jquery.fancybox-3.1.20.min.css" rel="stylesheet">
+
+
+
+
+<meta property="og:title" content="T-Rex Game" />
+<meta property="og:description" content="This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found here." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://cylopsis.com/post/reinforcement-learning/t-rex-game/" />
+<meta property="article:published_time" content="2019-03-03T23:50:11-05:00"/>
+<meta property="article:modified_time" content="2019-03-03T23:50:11-05:00"/>
+
+<meta itemprop="name" content="T-Rex Game">
+<meta itemprop="description" content="This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found here.">
+
+
+<meta itemprop="datePublished" content="2019-03-03T23:50:11-05:00" />
+<meta itemprop="dateModified" content="2019-03-03T23:50:11-05:00" />
+<meta itemprop="wordCount" content="1930">
+
+
+
+<meta itemprop="keywords" content="computer-vision,reinforcement-learning,machine-learning," />
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="T-Rex Game"/>
+<meta name="twitter:description" content="This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found here."/>
+
+<!--[if lte IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js"></script>
+<![endif]-->
+
+<!--[if lt IE 9]>
+  <script src="https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js"></script>
+<![endif]-->
+
+
+
+
+</head>
+<body>
+  <div id="mobile-navbar" class="mobile-navbar">
+  <div class="mobile-header-logo">
+    <a href="/" class="logo">Cylopsis</a>
+  </div>
+  <div class="mobile-navbar-icon">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</div>
+<nav id="mobile-menu" class="mobile-menu slideout-menu">
+  <ul class="mobile-menu-list">
+    <a href="/">
+        <li class="mobile-menu-item">Home</li>
+      </a><a href="/post/">
+        <li class="mobile-menu-item">Archives</li>
+      </a><a href="/tags/">
+        <li class="mobile-menu-item">Tags</li>
+      </a><a href="/categories/">
+        <li class="mobile-menu-item">Categories</li>
+      </a><a href="/about/">
+        <li class="mobile-menu-item">About</li>
+      </a>
+  </ul>
+</nav>
+
+  <header id="header" class="header container">
+    <div class="logo-wrapper">
+  <a href="/" class="logo">Cylopsis</a>
+</div>
+
+<nav class="site-navbar">
+  <ul id="menu" class="menu">
+    <li class="menu-item">
+        
+        <a class="menu-item-link" href="/">Home</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/post/">Archives</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/tags/">Tags</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/categories/">Categories</a>
+        
+      </li><li class="menu-item">
+        
+        <a class="menu-item-link" href="/about/">About</a>
+        
+      </li>
+  </ul>
+</nav>
+  </header>
+
+  <div id="mobile-panel">
+    <main id="main" class="main bg-llight">
+      <div class="content-wrapper">
+        <div id="content" class="content container">
+          <article class="post bg-white">
+    
+    <header class="post-header">
+      <h1 class="post-title">T-Rex Game</h1>
+      
+      <div class="post-meta">
+        <span class="post-time"> 2019-03-03 </span>
+        <div class="post-category">
+            
+              <a href="/categories/reinforcement-learning/"> reinforcement-learning </a>
+            
+          </div>
+        <span class="more-meta"> 1930 words </span>
+        <span class="more-meta"> 10 min read </span>
+      </div>
+    </header>
+
+    
+    
+<div class="post-toc" id="post-toc">
+  <h2 class="post-toc-title">Table of Contents</h2>
+  <div class="post-toc-content">
+    <nav id="TableOfContents">
+<ul>
+<li><a href="#motivation-and-goal">Motivation and Goal</a></li>
+<li><a href="#code-game-interaction">Code-Game Interaction</a></li>
+<li><a href="#algorithm">Algorithm</a>
+<ul>
+<li><a href="#activation-function">Activation function</a></li>
+<li><a href="#model-inputs-and-outputs">Model Inputs and Outputs</a></li>
+<li><a href="#data-collection-for-training">Data collection for training</a></li>
+<li><a href="#heuristic">Heuristic</a></li>
+<li><a href="#training-and-loss-function">Training and loss function</a></li>
+</ul></li>
+<li><a href="#performance">Performance</a></li>
+<li><a href="#conclusion-and-next-steps">Conclusion and Next Steps</a></li>
+</ul>
+</nav>
+  </div>
+</div>
+
+    
+    <div class="post-content">
+      
+
+<p>This article focuses on how I used a Neural Network and concepts that I learned from Supervised Learning in a Reinforcement Learning task. The project uses a simple NN trained by using a heuristic instead of a known output since we do not know an exact expected output here. The model is based on vision and a game screenshot is the only input given to the model. The complete code for the project can be found <a href="https://github.com/jagpreetschawla/reinforcement-learning-t-rex">here</a>.</p>
+
+
+  <video width="100%" height="auto" autoplay loop>
+    
+    <source src="/vid/t-rex.mp4" type="video/mp4">
+    <p style="text-align: center">Your browser does not support HTML5 videos or the video encoding. 
+    You can download/view the video from <a href="/vid/t-rex.mp4"></a>.
+    </p>
+    
+  </video>
+  
+    <span style="display:block; text-align: center"><small>The algorithm playing the game after learning from only 15 games. This was the first time it sees a bird and still guessed that it needs to jump for low flying birds but not for high flying ones!</small></span>
+  
+
+
+<h1 id="motivation-and-goal">Motivation and Goal</h1>
+
+<p>The idea of having a program learn to play a game all by itself seemed really interesting to me and I wanted to try it out myself. One way to achieve this is to find a good model from a space of possible models using a search method such as a genetic algorithm. But this doesn&rsquo;t scale well to non-trivial games or for higher dimensional models as the program will not be learning but will be trying out every possible model in hope for finding a good one. So I wanted to work on an algorithm which actually tries to learn, and hence I decided to take on this project.</p>
+
+<p>Reinforcement Learning is a broad field and has a lot of ongoing development and research. As a learning experience, I wanted to start from scratch and implement something on my own instead of using a known algorithm directly, similar to how I implemented my own CNN based on YOLO regression concepts in my <a href="/post/computer-vision/face-attribute-detection/">real-time face detection with attribute classification</a> project. So I decided to experiment with the concepts that I learned from Supervised Learning and try to apply them here.</p>
+
+<h1 id="code-game-interaction">Code-Game Interaction</h1>
+
+<p>The game is opened in an actual browser and a <code>GUI automation</code> framework <code>pyautogui</code> is used to take screenshots as well as to control the mouse and keyboard to play the game.</p>
+
+<p>The program uses image based <code>template matching</code> using <code>OpenCV</code> to detect the game location on the screen. A similar method is used to figure out when the game is over.</p>
+
+<h1 id="algorithm">Algorithm</h1>
+
+<p>As mentioned above, the goal of the project is to try to use my supervised learning experience by adapting it for reinforcement learning. So, the used NN is a simple fully connected feed forward network with a single hidden layer and is trained using Adam Optimizer in exactly the same way as we do for any supervised learning task. The only difference here would be the expected outputs.</p>
+
+<p>Unlike supervised learning tasks where we had labeled data and expected output was known, here we need the model to figure out the correct output by itself. In order to help the model achieve that, we will be guiding it in the correct direction. So instead of correct expected output, we will use a heuristic to figure out what outputs should be used to train the model.</p>
+
+<h2 id="activation-function">Activation function</h2>
+
+<p>The model uses <code>tanh</code> activation for hidden layer and <code>softmax</code> for the output layer (since these are probabilities as explained below). There is no specific reason to use <code>tanh</code>, it just seemed right to me and happened to work well.</p>
+
+<h2 id="model-inputs-and-outputs">Model Inputs and Outputs</h2>
+
+<p>The model takes a <code>game screenshot</code> as the only input and model outputs the probabilities of 3 possible moves: <code>jump</code>, <code>duck</code>, <code>do nothing</code> (keep running). We continuously take a screenshot of the game and give it to the model and read its output. Whichever move has the maximum probability is the move that the model chose to take at that particular moment.</p>
+
+<h2 id="data-collection-for-training">Data collection for training</h2>
+
+<p>During each game, we store a list of all inputs given to the network and moves that the model makes (up to last 3000 input outputs). The model is trained using this data after every 2 games.</p>
+
+<h2 id="heuristic">Heuristic</h2>
+
+<p>This is the key part of the algorithm. We need to figure out how to train our model without any known expected outputs. If we carefully think about it, we can safely assume that the only wrong moves that the model made are among the last few moves (due to the linear nature of the game itself). Since our model survived till few seconds before the end, we can say that all the moves till this point were somewhat valid, since the end of the game doesn&rsquo;t depend on previous moves made, except the last few moves.</p>
+
+<p>We use this to our advantage. Since we agree with previous moves that the model made, we can safely use them as training data to reinforce the model to keep making these moves. So we take the moves that the model made and reinforce them by using same moves as expected output but with high probability.</p>
+
+<p>In order to account for uncertainty, I did not use probability <code>1</code> for training and used <code>0.9</code> instead. The rest 0.1 was divided into other 2 moves (<code>0.05</code> each). This is done as there is a small chance that the model just got here by luck instead of correct moves. For example, what if the model is always just jumping irrespective of input which happened to avoid all obstacles? Hence, we do not want to reinforce it too strongly.</p>
+
+<p>Now we know correct moves and reinforcing them but that is not enough to train the model, as discouraging the model from making bad moves is more important as our model was already almost right for rest of the moves anyway. But the problem is that we don&rsquo;t know what the correct moves should have been here. But we do know the wrong moves, so we use what we have. We will discourage the wrong moves by training with very low probability and we will divide the rest of probability among other moves (since we don&rsquo;t know which of them is correct). Same as above, I used <code>0.1</code> for low probability instead of <code>0</code> as we are not sure that every move in the last few frames are wrong and hence don&rsquo;t want to strongly discourage them. The rest of <code>0.9</code> is divided into other moves (<code>0.45</code> each).</p>
+
+<p>This is the main logic but in actual code, I divided my last few outputs (that we assumed are wrong) into 2 parts: the small set of last moves just before dying which are more probable to contribute to the death, and the rest of the moves which we think are wrong. I use higher weights (in loss function) for last moves to discourage them more strongly and low weights for rest of the wrong moves.</p>
+
+<h2 id="training-and-loss-function">Training and loss function</h2>
+
+<p>Now we have both input data, the moves made by the model and the correct move probabilities (using heuristics). Now we train the model using backpropagation with Adam Optimizer. For loss function, I am using <code>mean square error</code> as a loss function. Since the output is probabilities, I could have used <code>log loss</code> but I <code>intentionally avoided</code> it as it imposes a very high penalty for incorrect probabilities. This will actually be a disadvantage for us as some of the outputs based on our heuristics are not very specific and also might be wrong. By using mean squared error, even if our heuristic method is wrong for some inputs, we are not imposing a very high penalty.</p>
+
+<h1 id="performance">Performance</h1>
+
+<p>We are passing an image to the algorithm and it doesn&rsquo;t even know what pixels mean and still, the algorithm does figure out the game rules by itself and is able to play the game (better than me).</p>
+
+<p>Below is an image of snippets from a game that algorithm played. We can see that the algorithm figured out that it needs to jump over cactus and low flying birds. It even figured out that it needs to duck to avoid high flying birds. Although for some reason, it thinks that it is a good idea to always duck while running.</p>
+
+<figure class="center">
+    <img src="/img/t-rex-snippet.png"
+         alt="Snippets from the game played by our NN. It figured out that it needs to jump over cactus and birds and even learned that ducking is enough to avoid high flying birds."/> <figcaption>
+            <p><small>Snippets from the game played by our NN. It figured out that it needs to jump over cactus and birds and even learned that ducking is enough to avoid high flying birds.</small></p>
+        </figcaption>
+</figure>
+
+
+<p>When the algorithm sees a high flying bird for the first time, I anticipated it to make a mistake and jump since I expected it to learn a simple rule that jumps whenever something is in front. Interestingly, it didn&rsquo;t jump as if it knows how to avoid it (it likes to duck by default so it was already ducking).</p>
+
+<p>The algorithm also keeps up with increasing speed until the game is fast enough for it to land on another cactus or bird whenever it jumps to avoid one. This is due to the fact that the model doesn&rsquo;t actually know about the speed at all! All it gets is a screenshot of the game, so it is trying to make a decision based on image and not the actual game. See next section for my ideas to fix this.</p>
+
+<h1 id="conclusion-and-next-steps">Conclusion and Next Steps</h1>
+
+<p>This was an interesting project and a good learning exercise for me. The method used is quite simple and makes some assumption. The biggest drawback of this approach is that we need to know (at least approximately) which moves are the wrong ones, as we did in this project where last few frames will most likely be responsible for game-over.</p>
+
+<p>Overall this project proves that by using a simple understanding of the game and some heuristics, we can train a NN to play simple games by using normal backpropagation as we do for any other supervised learning tasks.</p>
+
+<p>Other than finding bad moves, most games have another challenge. In most complicated games we usually need to explore the area to find a solution and hence we also need a method that teaches the algorithm to explore unknown moves or areas in a systematic and balanced way. Unlike this project where we have only 3 moves and 1 of them is always right, most games are not that straight forward.</p>
+
+<p>For this project, there are few things that we can change or try out to improve our algorithm or code, some of them are:</p>
+
+<ul>
+<li>Incorporate speed. Currently, the model makes a decision based solely on a screenshot and hence has no way to know that the game has an increasing speed. This kills the model when it jumps to avoid an obstacle but lands on another. We need to give speed cues to the model and one simple way to do that would be to pass the last 2 frames as input, or difference of the last 2 frames. That way model has sufficient data and has a chance to learn about speed.</li>
+<li>keeping a copy of the best model, as sometimes model degrades when it starts trying a new strategy. This way we can restart learning using this point as a checkpoint.</li>
+<li>Using data from many games instead of just 2 games before training the existing model, especially after the model has learned to play to some extent. This will also avoid degradation that is mentioned in the above point as the model will have more data to consider before it comes up with new strategy. An ideal way would be to initially train model after every game but gradually start increasing number of games before training.</li>
+</ul>
+
+<p>The complete code for the project can be found in my GitHub <a href="https://github.com/jagpreetschawla/reinforcement-learning-t-rex">here</a>.</p>
+
+    </div>
+
+    
+    
+
+    
+    
+
+    <footer class="post-footer">
+      <div class="post-tags">
+          
+          <a href="/tags/computer-vision/">computer-vision</a>
+          
+          <a href="/tags/reinforcement-learning/">reinforcement-learning</a>
+          
+          <a href="/tags/machine-learning/">machine-learning</a>
+          
+        </div>
+
+      
+      <nav class="post-nav">
+        
+        
+          <a class="next" href="/post/computer-vision/face-attribute-detection/">
+            <span class="next-text nav-default">Realtime Face Attribute Detection</span>
+            <span class="prev-text nav-mobile">Next</span>
+            <i class="iconfont icon-right"></i>
+          </a>
+      </nav>
+    </footer>
+    
+
+  
+
+  
+
+  
+  </article>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="social-links">
+      <a href="mailto:jagpreet@cylopsis.com" rel="me" class="iconfont icon-email" title="email"></a>
+      <a href="https://www.linkedin.com/in/jagpreet-singh-chawla-427121104/" rel="me" class="iconfont icon-linkedin" title="linkedin"></a>
+      <a href="https://github.com/jagpreetschawla" rel="me" class="iconfont icon-github" title="github"></a>
+  <a href="http://cylopsis.com/index.xml" type="application/rss+xml" class="iconfont icon-rss" title="rss"></a>
+</div>
+
+<div class="copyright">
+  <span class="power-by">
+    Powered by <a class="hexo-link" href="https://gohugo.io">Hugo</a>
+  </span>
+  <span class="division">|</span>
+  <span class="theme-info">
+    Theme - <a class="theme-link" href="https://github.com/xianmin/hugo-theme-jane">Jane</a>
+  </span>
+
+  <span class="copyright-year">
+    &copy; 
+    
+      2018 - 
+    2019
+    <span class="heart">
+      <i class="iconfont icon-heart"></i>
+    </span>
+    <span class="author">Jagpreet Singh Chawla</span>
+  </span>
+</div>
+    </footer>
+
+    <div class="back-to-top" id="back-to-top">
+      <i class="iconfont icon-up"></i>
+    </div>
+  </div>
+  
+<script src="/lib/highlight/highlight.pack.js?v=20171001"></script>
+<script type="text/javascript" src="/lib/jquery/jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="/lib/slideout/slideout-1.0.1.min.js"></script>
+  <script type="text/javascript" src="/lib/fancybox/jquery.fancybox-3.1.20.min.js"></script>
+<script type="text/javascript" src="/dist/jane.min.js?v=2.7.0"></script>
+  <script type="text/javascript">
+    window.MathJax = {
+      showProcessingMessages: false,
+      messageStyle: 'none'
+    };
+  </script>
+  <script async src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'></script>
+
+
+
+
+
+</body>
+</html>
